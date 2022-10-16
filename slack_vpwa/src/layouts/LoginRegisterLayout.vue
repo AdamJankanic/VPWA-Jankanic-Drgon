@@ -1,5 +1,9 @@
 <template>
-  <router-view @login="login"></router-view>
+  <q-layout>
+    <q-page-container>
+      <router-view @login="login" class="centerPage"></router-view>
+    </q-page-container>
+  </q-layout>
 </template>
 
 <script>
@@ -12,4 +16,14 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.centerPage {
+  display: flex;
+
+  /* row-gap: 0; */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: auto;
+}
+</style>

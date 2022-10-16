@@ -1,154 +1,159 @@
 <template>
-  <div class="q-pa-md">
-    <div class="q-gutter-y-md" style="max-width: 600px">
-      <q-card>
-        <q-tabs
-          v-model="tab"
-          dense
-          class="text-grey"
-          active-color="primary"
-          indicator-color="primary"
-          align="justify"
-          narrow-indicator
-        >
-          <q-tab name="login" label="LOGIN" />
-          <q-tab name="register" label="REGISTER" />
-        </q-tabs>
+  <!-- <div class="centerContent"> -->
+  <q-page class="row items-center justify-evenly">
+    <h2>Slack v2</h2>
+    <div class="q-md">
+      <div class="q-gutter-y-md" style="max-width: 10000px">
+        <q-card>
+          <q-tabs
+            v-model="tab"
+            dense
+            class="text-grey"
+            active-color="primary"
+            indicator-color="primary"
+            align="justify"
+            narrow-indicator
+          >
+            <q-tab name="login" label="LOGIN" />
+            <q-tab name="register" label="REGISTER" />
+          </q-tabs>
 
-        <q-separator />
+          <q-separator />
 
-        <q-tab-panels v-model="tab" animated>
-          <q-tab-panel name="login">
-            <div class="text-h6">LOGIN</div>
-            <q-form
-              @reset="onReset"
-              @submit="$emit('login')"
-              class="q-gutter-md"
-            >
-              <q-input
-                filled
-                v-model="lemail"
-                label="Email"
-                lazy-rules
-                :rules="[
-                  (val) => (val && val.length > 0) || 'Please type something',
-                ]"
-              />
-
-              <q-input
-                v-model="lpassword"
-                filled
-                label="Password"
-                :type="lisPwd ? 'password' : 'text'"
-                lazy-rules
-                :rules="[
-                  (val) => (val && val.length > 0) || 'Please type something',
-                ]"
+          <q-tab-panels v-model="tab" animated>
+            <q-tab-panel name="login">
+              <div class="text-h6">LOGIN</div>
+              <q-form
+                @reset="onReset"
+                @submit="$emit('login')"
+                class="q-gutter-md"
               >
-                <template v-slot:append>
-                  <q-icon
-                    :name="lisPwd ? 'visibility_off' : 'visibility'"
-                    class="cursor-pointer"
-                    @click="lisPwd = !lisPwd"
-                  />
-                </template>
-              </q-input>
-
-              <div>
-                <q-btn label="Login" type="submit" color="primary" />
-                <q-btn
-                  label="Reset"
-                  type="reset"
-                  color="primary"
-                  flat
-                  class="q-ml-sm"
+                <q-input
+                  filled
+                  v-model="lemail"
+                  label="Email"
+                  lazy-rules
+                  :rules="[
+                    (val) => (val && val.length > 0) || 'Please type something',
+                  ]"
                 />
-              </div>
-            </q-form>
-          </q-tab-panel>
 
-          <q-tab-panel name="register">
-            <div class="text-h6">REGISTER</div>
-            <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-              <q-input
-                filled
-                v-model="rname"
-                label="Nickname"
-                lazy-rules
-                :rules="[
-                  (val) => (val && val.length > 0) || 'Please type something',
-                ]"
-              />
+                <q-input
+                  v-model="lpassword"
+                  filled
+                  label="Password"
+                  :type="lisPwd ? 'password' : 'text'"
+                  lazy-rules
+                  :rules="[
+                    (val) => (val && val.length > 0) || 'Please type something',
+                  ]"
+                >
+                  <template v-slot:append>
+                    <q-icon
+                      :name="lisPwd ? 'visibility_off' : 'visibility'"
+                      class="cursor-pointer"
+                      @click="lisPwd = !lisPwd"
+                    />
+                  </template>
+                </q-input>
 
-              <q-input
-                filled
-                v-model="remail"
-                label="Email"
-                lazy-rules
-                :rules="[
-                  (val) => (val && val.length > 0) || 'Please type something',
-                ]"
-              />
-
-              <q-input
-                v-model="rpassword"
-                filled
-                label="Password"
-                :type="risPwd ? 'password' : 'text'"
-                lazy-rules
-                :rules="[
-                  (val) => (val && val.length > 0) || 'Please type something',
-                ]"
-              >
-                <template v-slot:append>
-                  <q-icon
-                    :name="risPwd ? 'visibility_off' : 'visibility'"
-                    class="cursor-pointer"
-                    @click="risPwd = !risPwd"
+                <div>
+                  <q-btn label="Login" type="submit" color="primary" />
+                  <q-btn
+                    label="Reset"
+                    type="reset"
+                    color="primary"
+                    flat
+                    class="q-ml-sm"
                   />
-                </template>
-              </q-input>
+                </div>
+              </q-form>
+            </q-tab-panel>
 
-              <q-input
-                v-model="rrpassword"
-                filled
-                label="Repeat Password"
-                :type="rrisPwd ? 'password' : 'text'"
-                lazy-rules
-                :rules="[
-                  (val) => (val && val.length > 0) || 'Please type something',
-                ]"
-              >
-                <template v-slot:append>
-                  <q-icon
-                    :name="rrisPwd ? 'visibility_off' : 'visibility'"
-                    class="cursor-pointer"
-                    @click="rrisPwd = !rrisPwd"
-                  />
-                </template>
-              </q-input>
-
-              <q-toggle
-                v-model="accept"
-                label="I accept the license and terms"
-              />
-
-              <div>
-                <q-btn label="Register" type="submit" color="primary" />
-                <q-btn
-                  label="Reset"
-                  type="reset"
-                  color="primary"
-                  flat
-                  class="q-ml-sm"
+            <q-tab-panel name="register">
+              <div class="text-h6">REGISTER</div>
+              <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+                <q-input
+                  filled
+                  v-model="rname"
+                  label="Nickname"
+                  lazy-rules
+                  :rules="[
+                    (val) => (val && val.length > 0) || 'Please type something',
+                  ]"
                 />
-              </div>
-            </q-form>
-          </q-tab-panel>
-        </q-tab-panels>
-      </q-card>
+
+                <q-input
+                  filled
+                  v-model="remail"
+                  label="Email"
+                  lazy-rules
+                  :rules="[
+                    (val) => (val && val.length > 0) || 'Please type something',
+                  ]"
+                />
+
+                <q-input
+                  v-model="rpassword"
+                  filled
+                  label="Password"
+                  :type="risPwd ? 'password' : 'text'"
+                  lazy-rules
+                  :rules="[
+                    (val) => (val && val.length > 0) || 'Please type something',
+                  ]"
+                >
+                  <template v-slot:append>
+                    <q-icon
+                      :name="risPwd ? 'visibility_off' : 'visibility'"
+                      class="cursor-pointer"
+                      @click="risPwd = !risPwd"
+                    />
+                  </template>
+                </q-input>
+
+                <q-input
+                  v-model="rrpassword"
+                  filled
+                  label="Repeat Password"
+                  :type="rrisPwd ? 'password' : 'text'"
+                  lazy-rules
+                  :rules="[
+                    (val) => (val && val.length > 0) || 'Please type something',
+                  ]"
+                >
+                  <template v-slot:append>
+                    <q-icon
+                      :name="rrisPwd ? 'visibility_off' : 'visibility'"
+                      class="cursor-pointer"
+                      @click="rrisPwd = !rrisPwd"
+                    />
+                  </template>
+                </q-input>
+
+                <q-toggle
+                  v-model="accept"
+                  label="I accept the license and terms"
+                />
+
+                <div>
+                  <q-btn label="Register" type="submit" color="primary" />
+                  <q-btn
+                    label="Reset"
+                    type="reset"
+                    color="primary"
+                    flat
+                    class="q-ml-sm"
+                  />
+                </div>
+              </q-form>
+            </q-tab-panel>
+          </q-tab-panels>
+        </q-card>
+      </div>
     </div>
-  </div>
+  </q-page>
+  <!-- </div> -->
 </template>
 
 <script lang="ts">
@@ -217,4 +222,9 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.q-tabs {
+  width: 40rem;
+  /* width: auto; */
+}
+</style>
