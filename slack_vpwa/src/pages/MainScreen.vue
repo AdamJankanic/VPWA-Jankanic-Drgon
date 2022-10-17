@@ -33,46 +33,31 @@
     </div> -->
 
     <div style="width: 100%">
-      <q-chat-message
-        :text="['Have you seen Quasar?']"
-        sent
-        text-color="white"
-        bg-color="primary"
-      >
-        <template v-slot:name>me</template>
-        <template v-slot:stamp>7 minutes ago</template>
-        <template v-slot:avatar>
-          <img
-            class="q-message-avatar q-message-avatar--sent"
-            src="https://cdn.quasar.dev/img/avatar3.jpg"
-          />
-        </template>
-      </q-chat-message>
+      <div>
+        <q-chat-message
+          v-for="message in messages"
+          v-bind:key="message.id"
+          :name="message.name"
+          :avatar="message.avatar"
+          :text="[message.textMess]"
+          :sent="message.sent"
+        />
 
-      <q-chat-message bg-color="amber">
-        <template v-slot:name>Mary</template>
-        <template v-slot:avatar>
-          <img
-            class="q-message-avatar q-message-avatar--received"
-            src="https://cdn.quasar.dev/img/avatar2.jpg"
-          />
-        </template>
-
-        <div>
-          Already building an app with it...
-          <img
-            src="https://cdn.quasar.dev/img/discord-qeart.png"
-            class="my-emoji"
-          />
-        </div>
-
-        <q-spinner-dots size="2rem" />
-      </q-chat-message>
+        <!-- <q-chat-message
+          name="Jane"
+          avatar="https://cdn.quasar.dev/img/avatar5.jpg"
+          :text="['Did it work?']"
+          stamp="1 minutes ago"
+          size="8"
+          text-color="white"
+          bg-color="primary"
+        /> -->
+      </div>
     </div>
 
     <q-input
       bottom-slots
-      v-model="text"
+      v-model="inputText"
       label="Label"
       counter
       :dense="dense"
@@ -86,71 +71,65 @@
 
       <template v-slot:append>
         <q-icon
-          v-if="text !== ''"
+          v-if="inputText !== ''"
           name="close"
-          @click="text = ''"
+          @click="inputText = ''"
           class="cursor-pointer"
         />
       </template>
 
       <template v-slot:after>
-        <q-btn round dense flat icon="send" />
+        <q-btn @click="send" round dense flat icon="send" />
       </template>
     </q-input>
   </q-page>
 </template>
 
-<script lang="ts">
+<script>
 import { ref } from 'vue';
-const contacts = [
+
+let messages = [
   {
     id: 1,
-    name: 'Ruddy Jedrzej',
-    email: 'rjedrzej0@discuz.net',
-    letter: 'R',
+    name: 'me',
+    avatar: 'https://cdn.quasar.dev/img/avatar3.jpg',
+    textMess: 'Ahojdaaaa',
+    sent: true,
   },
   {
     id: 2,
-    name: 'Mallorie Alessandrini',
-    email: 'malessandrini1@marketwatch.com',
-    letter: 'M',
-  },
-  {
-    id: 3,
-    name: 'Elisabetta Wicklen',
-    email: 'ewicklen2@microsoft.com',
-    letter: 'E',
-  },
-  {
-    id: 4,
-    name: 'Seka Fawdrey',
-    email: 'sfawdrey3@wired.com',
-    letter: 'S',
-  },
-];
-
-const offline = [
-  {
-    id: 5,
-    name: 'Brunhilde Panswick',
-    email: 'bpanswick4@csmonitor.com',
-    avatar: 'avatar2.jpg',
-  },
-  {
-    id: 6,
-    name: 'Winfield Stapforth',
-    email: 'wstapforth5@pcworld.com',
-    avatar: 'avatar6.jpg',
+    name: 'Jane',
+    avatar: 'https://cdn.quasar.dev/img/avatar5.jpg',
+    textMess: 'Cauko kakauko',
+    sent: false,
   },
 ];
 
 export default {
-  setup() {
+  data() {
     return {
-      text: ref(''),
+      inputText: ref(''),
       ph: ref(''),
       dense: ref(false),
+      messages,
     };
+  },
+
+  methods: {
+    send() {
+      let messageText = this.inputText;
+      this.inputText = '';
+      let obj = {
+        id: 4,
+        name: 'me',
+        avatar: 'https://cdn.quasar.dev/img/avatar3.jpg',
+        textMess: messageText,
+        sent: true,
+      };
+      messages.push(obj);
+
+      console.log(messages);
+    },
   },
 };
 </script>
