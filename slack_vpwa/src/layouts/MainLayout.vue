@@ -21,47 +21,45 @@
       </q-header>
 
       <q-drawer
+        v-model="drawer"
         show-if-above
-        v-model="leftDrawerOpen"
-        side="left"
-        bordered
         :width="300"
         :breakpoint="500"
+        side="left"
       >
-        <q-scroll-area class="fit">
-          <q-list bordered style="overflow: auto; height: calc(100%-80px)">
-            <q-item
-              v-for="channel in channels"
-              :key="channel.id"
-              class="q-my-sm"
-              clickable
-              v-ripple
-            >
-              <q-item-section avatar>
-                <q-avatar color="primary" text-color="white">
-                  {{ channel.letter }}
-                </q-avatar>
-              </q-item-section>
+      <q-list bordered style="overflow: auto; height: calc(100% - 80px);">
+        <q-item
+          v-for="channel in channels"
+          :key="channel.id"
+          class="q-my-sm"
+          clickable
+          v-ripple
+        >
+          <q-item-section avatar>
+            <q-avatar color="primary" text-color="white">
+              {{ channel.letter }}
+            </q-avatar>
+          </q-item-section>
 
-              <q-item-section>
-                <q-item-label>{{ channel.name }}</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-scroll-area>
-        <div class="flex absolute-bottom profile">
-          <q-avatar size="xl" class="two_rows">
-            <img :src="`https://cdn.quasar.dev/img/avatar3.jpg`" />
-          </q-avatar>
-          <div class="nickname">
-            <p>Alice159</p>
-          </div>
-          <div class="icons">
-            <q-icon size="md" name="chat_bubble" color="green" />
-            <q-icon size="md" name="settings" color="grey" />
-          </div>
-          <button class="btn two_rows">Log Out</button>
+          <q-item-section>
+            <q-item-label>{{ channel.name }}</q-item-label>
+          </q-item-section>
+        </q-item>
+      </q-list>
+      
+      <div class="flex absolute-bottom profile" >
+        <q-avatar size="xl" class="two_rows">
+          <img :src="`https://cdn.quasar.dev/img/avatar3.jpg`" />
+        </q-avatar>
+        <div class="nickname">
+          <p>Alice159</p>
         </div>
+        <div class="icons">
+          <q-icon size="md" name="chat_bubble" color="green" />
+          <q-icon size="md" name="settings" color="grey" />
+        </div>
+        <button class="btn two_rows">Log Out</button>
+      </div>
       </q-drawer>
 
       <q-drawer
@@ -117,6 +115,66 @@ const channels = [
     id: 2,
     name: 'General',
     letter: 'G',
+  },
+  {
+    id: 3,
+    name: 'HaHa Room',
+    letter: 'H',
+  },
+  {
+    id: 4,
+    name: 'HaHa Room',
+    letter: 'H',
+  },
+  {
+    id: 3,
+    name: 'HaHa Room',
+    letter: 'H',
+  },
+  {
+    id: 4,
+    name: 'HaHa Room',
+    letter: 'H',
+  },
+  {
+    id: 3,
+    name: 'HaHa Room',
+    letter: 'H',
+  },
+  {
+    id: 4,
+    name: 'HaHa Room',
+    letter: 'H',
+  },
+  {
+    id: 3,
+    name: 'HaHa Room',
+    letter: 'H',
+  },
+  {
+    id: 4,
+    name: 'HaHa Room',
+    letter: 'H',
+  },
+  {
+    id: 3,
+    name: 'HaHa Room',
+    letter: 'H',
+  },
+  {
+    id: 4,
+    name: 'HaHa Room',
+    letter: 'H',
+  },
+  {
+    id: 3,
+    name: 'HaHa Room',
+    letter: 'H',
+  },
+  {
+    id: 4,
+    name: 'HaHa Room',
+    letter: 'H',
   },
   {
     id: 3,
