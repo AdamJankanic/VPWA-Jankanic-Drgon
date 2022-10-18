@@ -27,40 +27,93 @@
         :breakpoint="500"
         side="left"
       >
-      <q-list bordered style="overflow: auto; height: calc(100% - 80px);">
-        <q-item
-          v-for="channel in channels"
-          :key="channel.id"
-          class="q-my-sm"
-          clickable
-          v-ripple
-        >
-          <q-item-section avatar>
-            <q-avatar color="primary" text-color="white">
-              {{ channel.letter }}
-            </q-avatar>
-          </q-item-section>
+        <q-list bordered style="overflow: auto; height: calc(100% - 80px)">
+          <q-item
+            v-for="channel in channels"
+            :key="channel.id"
+            class="q-my-sm"
+            clickable
+            v-ripple
+          >
+            <q-item-section avatar>
+              <q-avatar color="primary" text-color="white">
+                {{ channel.letter }}
+              </q-avatar>
+            </q-item-section>
 
-          <q-item-section>
-            <q-item-label>{{ channel.name }}</q-item-label>
-          </q-item-section>
-        </q-item>
-      </q-list>
-      
-      <div class="flex absolute-bottom profile" >
-        <q-avatar size="xl" class="two_rows">
-          <img :src="`https://cdn.quasar.dev/img/avatar3.jpg`" />
-        </q-avatar>
-        <div class="nickname">
-          <p>Alice159</p>
+            <q-item-section>
+              <q-item-label>{{ channel.name }}</q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+
+        <div class="flex absolute-bottom profile">
+          <q-avatar size="xl" class="two_rows">
+            <img :src="`https://cdn.quasar.dev/img/avatar3.jpg`" />
+          </q-avatar>
+          <div class="nickname">
+            <p>Alice159</p>
+          </div>
+          <div class="icons">
+            <q-icon size="md" name="chat_bubble" color="green" />
+            <q-icon
+              @click="small = true"
+              size="md"
+              name="settings"
+              color="grey"
+            />
+          </div>
+          <button class="btn two_rows">Log Out</button>
         </div>
-        <div class="icons">
-          <q-icon size="md" name="chat_bubble" color="green" />
-          <q-icon size="md" name="settings" color="grey" />
-        </div>
-        <button class="btn two_rows">Log Out</button>
-      </div>
       </q-drawer>
+
+      <q-dialog v-model="small">
+        <q-card style="width: 500px">
+          <q-card-section>
+            <div class="text-h6">OPTIONS</div>
+          </q-card-section>
+
+          <q-card-section class="q-pt-none">
+            <div class="flexbox">
+              <h6>Online/Offline</h6>
+              <q-toggle
+                false-value="Offline"
+                :label="`${onnlineOffline}`"
+                true-value="Online"
+                color="green"
+                v-model="onnlineOffline"
+              />
+              <!-- <q-icon size="md" name="chat_bubble" color="green"  /> -->
+            </div>
+            <div class="flexbox">
+              <h6>Do Not Disturb</h6>
+              <q-toggle
+                false-value="Off"
+                :label="`${DNB}`"
+                true-value="On"
+                color="red"
+                v-model="DNB"
+              />
+              <!-- <q-icon size="md" name="chat_bubble" color="green"  /> -->
+            </div>
+            <div class="flexbox">
+              <h6>Notifications</h6>
+              <q-toggle
+                false-value="Off"
+                :label="`${notifications}`"
+                true-value="On"
+                color="green"
+                v-model="notifications"
+              />
+              <!-- <q-icon size="md" name="chat_bubble" color="green"  /> -->
+            </div>
+          </q-card-section>
+
+          <q-card-actions align="right" class="bg-white text-teal">
+            <q-btn flat label="OK" v-close-popup />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
 
       <q-drawer
         v-model="drawer"
@@ -265,13 +318,23 @@ const users = [
 
 export default {
   computed: {},
+  data() {
+    return {};
+  },
   setup() {
     return {
       drawer: ref(false),
+      small: ref(false),
+      onnlineOffline: ref('Online'),
+      notifications: ref('On'),
+      DNB: ref('Off'),
       channels,
       users,
+      onlineColor: 'grey',
     };
   },
+
+  methods: {},
 };
 </script>
 
@@ -283,6 +346,10 @@ export default {
   grid-template-rows: 1fr 1fr;
   align-items: center;
   column-gap: 0px;
+}
+
+.flexbox {
+  display: flex;
 }
 
 .two_rows {
