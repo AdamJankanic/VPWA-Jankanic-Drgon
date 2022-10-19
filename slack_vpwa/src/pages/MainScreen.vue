@@ -31,9 +31,9 @@
         bg-color="primary"
       />
     </div> -->
-
-    <div style="width: 100%">
-      <div>
+    
+    <div style="width: 100%; overflow: auto;">
+      <div class="q-pa-md">
         <q-chat-message
           v-for="message in messages"
           v-bind:key="message.id"
@@ -41,27 +41,42 @@
           :avatar="message.avatar"
           :text="[message.textMess]"
           :sent="message.sent"
+          :bg-color="message.color"
         />
 
-        <!-- <q-chat-message
+        <q-chat-message
           name="Jane"
           avatar="https://cdn.quasar.dev/img/avatar5.jpg"
-          :text="['Did it work?']"
-          stamp="1 minutes ago"
-          size="8"
-          text-color="white"
-          bg-color="primary"
-        /> -->
+          :text="['@Alice159 zvyraznena sprava']"
+          text-color="black"
+          bg-color="accent"
+        />
+
+        <div>
+          <q-chat-message avatar="https://cdn.quasar.dev/img/avatar5.jpg" bg-color="grey" name="Jane">
+            <q-btn-dropdown color="grey" label="Jane is typing..."  menu-self="bottom start">
+              <q-list style="width: 300px;">
+                <q-item clickable v-close-popup @click="onItemClick">
+                  <q-item-section>
+                    <q-item-label>nieco tajne pisem... nepozeraj</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-btn-dropdown>
+        </q-chat-message>
+        </div>
+
       </div>
     </div>
 
     <q-input
       bottom-slots
       v-model="inputText"
-      label="Label"
+      label="Message"
       counter
       :dense="dense"
       class="messageInput"
+      @keyup.enter="send"
     >
       <template v-slot:before>
         <q-avatar>
@@ -95,6 +110,8 @@ let messages = [
     avatar: 'https://cdn.quasar.dev/img/avatar3.jpg',
     textMess: 'Ahojdaaaa',
     sent: true,
+    color: 'blue',
+    channelID: 1,
   },
   {
     id: 2,
@@ -102,6 +119,17 @@ let messages = [
     avatar: 'https://cdn.quasar.dev/img/avatar5.jpg',
     textMess: 'Cauko kakauko',
     sent: false,
+    color: 'grey',
+    channelID: 1,
+  },
+  {
+    id: 3,
+    name: 'Jane',
+    avatar: 'https://cdn.quasar.dev/img/avatar5.jpg',
+    textMess: 'asdffasd',
+    sent: false,
+    color: 'grey',
+    channelID: 1,
   },
 ];
 
@@ -118,12 +146,16 @@ export default {
   methods: {
     send() {
       let messageText = this.inputText;
+      if (messageText === ''){
+        return
+      };
       this.inputText = '';
       let obj = {
         id: 4,
         name: 'me',
         avatar: 'https://cdn.quasar.dev/img/avatar3.jpg',
         textMess: messageText,
+        color: 'blue',
         sent: true,
       };
       messages.push(obj);

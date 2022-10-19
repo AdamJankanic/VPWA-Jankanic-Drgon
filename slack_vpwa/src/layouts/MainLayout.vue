@@ -12,6 +12,15 @@
               icon="menu"
               class="absolute-right"
             />
+
+            <q-btn 
+              flat
+              @click="createGroup=true"
+              round
+              dense
+              icon="add"
+              class="absoulte-left"
+            />
           </q-toolbar>
 
           <q-toolbar-title class="absolute-center vertical-top">
@@ -21,16 +30,37 @@
       </q-header>
 
       <q-drawer
-        v-model="drawer"
+        v-model="drawerOn"
         show-if-above
         :width="300"
         :breakpoint="500"
         side="left"
       >
+
         <q-list bordered style="overflow: auto; height: calc(100% - 80px)">
+          <q-item style="background-color: grey;">
+            <q-item-section avatar>
+              <q-avatar color="primary" text-color="white">
+                S
+              </q-avatar>
+            </q-item-section>
+
+            <q-item-section>
+              <q-item-label>Slack</q-item-label>
+            </q-item-section>
+
+            <q-item-section>
+              <q-icon name=done color="green" size="md"/>
+            </q-item-section>
+
+            <q-item-section>
+              <q-icon name=close color="red" size="md"/>
+            </q-item-section>
+          </q-item>
+
           <q-item
-            v-for="channel in channels"
-            :key="channel.id"
+            v-for="(channel,index) in channels"
+            v-bind:key="channel.id"
             class="q-my-sm"
             clickable
             v-ripple
@@ -43,6 +73,15 @@
 
             <q-item-section>
               <q-item-label>{{ channel.name }}</q-item-label>
+            </q-item-section>
+
+            <q-item-section>
+              <q-icon  v-if="channel.public" name=people />
+              <q-icon  v-else name=lock />
+            </q-item-section>
+
+            <q-item-section>
+              <q-icon @click="leaveChannel(index)" name=delete />
             </q-item-section>
           </q-item>
         </q-list>
@@ -63,10 +102,38 @@
               color="grey"
             />
           </div>
-          <button class="btn two_rows">Log Out</button>
+          <button @click = "logout" class="btn two_rows">Log Out</button> 
         </div>
       </q-drawer>
 
+      <q-dialog v-model="createGroup">
+        <q-card style="width: 500px">
+          <q-card-section>
+            <div class="text-h6">Create channel</div>
+          </q-card-section>
+
+          <q-card-section class="q-pt-none">
+            <q-input outlined v-model="channelName" label="Channel name" />
+
+
+            <div>
+              <q-toggle
+                false-value="Private"
+                :label="`${privatePublic}`"
+                true-value="Public"
+                color="green"
+                v-model="privatePublic"
+              />
+              <!-- <q-icon size="md" name="chat_bubble" color="green"  /> -->
+            </div>
+          </q-card-section>
+
+          <q-card-actions align="right" class="bg-white text-teal">
+            <q-btn flat label="OK" v-close-popup />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+      
       <q-dialog v-model="small">
         <q-card style="width: 500px">
           <q-card-section>
@@ -158,146 +225,175 @@
 
 <script>
 import { ref } from 'vue';
-const channels = [
+
+let channels = [
   {
     id: 1,
     name: 'VPWA',
     letter: 'V',
+    public: true,
   },
   {
     id: 2,
     name: 'General',
     letter: 'G',
+    public: false,
   },
   {
     id: 3,
     name: 'HaHa Room',
     letter: 'H',
+    public: false,
   },
   {
     id: 4,
-    name: 'HaHa Room',
+    name: 'HaHa Room1',
     letter: 'H',
+    public: true,
   },
   {
-    id: 3,
-    name: 'HaHa Room',
+    id: 5,
+    name: 'HaHa Room2',
     letter: 'H',
+    public: true,
   },
   {
-    id: 4,
-    name: 'HaHa Room',
+    id: 6,
+    name: 'HaHa Room3',
     letter: 'H',
+    public: true,
   },
   {
-    id: 3,
-    name: 'HaHa Room',
+    id: 7,
+    name: 'HaHa Room4',
     letter: 'H',
+    public: true,
   },
   {
-    id: 4,
-    name: 'HaHa Room',
+    id: 8,
+    name: 'HaHa Room5',
     letter: 'H',
+    public: true,
   },
   {
-    id: 3,
-    name: 'HaHa Room',
+    id: 9,
+    name: 'HaHa Room6',
     letter: 'H',
+    public: true,
   },
   {
-    id: 4,
-    name: 'HaHa Room',
+    id: 10,
+    name: 'HaHa Room7',
     letter: 'H',
+    public: true,
   },
   {
-    id: 3,
-    name: 'HaHa Room',
+    id: 11,
+    name: 'HaHa Room8',
     letter: 'H',
+    public: true,
   },
   {
-    id: 4,
-    name: 'HaHa Room',
+    id: 12,
+    name: 'HaHa Room9',
     letter: 'H',
+    public: true,
   },
   {
-    id: 3,
-    name: 'HaHa Room',
+    id: 13,
+    name: 'HaHa Room10',
     letter: 'H',
+    public: true,
   },
   {
-    id: 4,
-    name: 'HaHa Room',
+    id: 14,
+    name: 'HaHa Room11',
     letter: 'H',
+    public: true,
   },
   {
-    id: 3,
-    name: 'HaHa Room',
+    id: 15,
+    name: 'HaHa Room12',
     letter: 'H',
+    public: true,
   },
   {
-    id: 4,
-    name: 'HaHa Room',
+    id: 16,
+    name: 'HaHa Room13',
     letter: 'H',
+    public: true,
   },
   {
-    id: 3,
-    name: 'HaHa Room',
+    id: 17,
+    name: 'HaHa Room14',
     letter: 'H',
+    public: true,
   },
   {
-    id: 4,
-    name: 'HaHa Room',
+    id: 18,
+    name: 'HaHa Room15',
     letter: 'H',
+    public: true,
   },
   {
-    id: 3,
-    name: 'HaHa Room',
+    id: 19,
+    name: 'HaHa Room16',
     letter: 'H',
+    public: true,
   },
   {
-    id: 4,
-    name: 'HaHa Room',
+    id: 20,
+    name: 'HaHa Room17',
     letter: 'H',
+    public: true,
   },
   {
-    id: 3,
-    name: 'HaHa Room',
+    id: 21,
+    name: 'HaHa Room18',
     letter: 'H',
+    public: true,
   },
   {
-    id: 4,
-    name: 'HaHa Room',
+    id: 22,
+    name: 'HaHa Room19',
     letter: 'H',
+    public: true,
   },
   {
-    id: 3,
-    name: 'HaHa Room',
+    id: 23,
+    name: 'HaHa Room20',
     letter: 'H',
+    public: true,
   },
   {
-    id: 4,
-    name: 'HaHa Room',
+    id: 24,
+    name: 'HaHa Room21',
     letter: 'H',
+    public: true,
   },
   {
-    id: 3,
-    name: 'HaHa Room',
+    id: 25,
+    name: 'HaHa Room22',
     letter: 'H',
+    public: true,
   },
   {
-    id: 4,
-    name: 'HaHa Room',
+    id: 26,
+    name: 'HaHa Room23',
     letter: 'H',
+    public: true,
   },
   {
-    id: 3,
-    name: 'HaHa Room',
+    id: 27,
+    name: 'HaHa Room24',
     letter: 'H',
+    public: true,
   },
   {
-    id: 4,
-    name: 'HaHa Room',
+    id: 28,
+    name: 'HaHa Room25',
     letter: 'H',
+    public: true,
   },
 ];
 
@@ -319,22 +415,36 @@ const users = [
 export default {
   computed: {},
   data() {
-    return {};
+    return {
+      channels,
+    };
   },
   setup() {
     return {
+      channelName: ref(''),
       drawer: ref(false),
       small: ref(false),
+      drawerOn: ref(true),
       onnlineOffline: ref('Online'),
       notifications: ref('On'),
+      privatePublic: ref('Public'),
       DNB: ref('Off'),
-      channels,
+      createGroup: ref(false),
       users,
       onlineColor: 'grey',
     };
   },
 
-  methods: {},
+  methods: {
+    logout(){
+      this.$router.push('/auth');
+    },
+    leaveChannel(index){
+      this.channels.splice(index, 1);
+      console.log(channels);
+      console.log(index);
+    }
+  },
 };
 </script>
 
