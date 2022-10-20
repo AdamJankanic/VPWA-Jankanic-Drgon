@@ -1,115 +1,107 @@
 <template>
-  <q-page class="row items-center justify-evenly">
-    <!-- <div style="width: 100%">
-      <q-chat-message
-        name="me"
-        avatar="https://cdn.quasar.dev/img/avatar3.jpg"
-        :text="['hey, how are you?']"
-        stamp="7 minutes ago"
-        sent
-        bg-color="amber-7"
-      />
-      <q-chat-message
-        name="Jane"
-        avatar="https://cdn.quasar.dev/img/avatar5.jpg"
-        :text="[
-          'doing fine, how r you?',
-          'I just feel like typing a really, really, REALLY long message to annoy you...',
-        ]"
-        size="6"
-        stamp="4 minutes ago"
-        text-color="white"
-        bg-color="primary"
-      />
-      <q-chat-message
-        name="Jane"
-        avatar="https://cdn.quasar.dev/img/avatar5.jpg"
-        :text="['Did it work?']"
-        stamp="1 minutes ago"
-        size="8"
-        text-color="white"
-        bg-color="primary"
-      />
-    </div> -->
-
-    <div style="width: 100%; overflow: auto">
+  <q-page class="row items-center justify-evenly skuska">
+    <div class="chatbox" style="width: 100%; overflow: auto">
       <div class="q-pa-md">
-        <div v-for="message in messages" v-bind:key="message.id">
-          <q-chat-message
-            v-bind:key="message.id"
-            v-if="message.channelID == id_stranky"
-            :name="message.name"
-            :avatar="message.avatar"
-            :text="[message.textMess]"
-            :sent="message.sent"
-            :bg-color="message.color"
-          />
-        </div>
-        <q-chat-message
-          name="Jane"
-          avatar="https://cdn.quasar.dev/img/avatar5.jpg"
-          :text="['@Alice159 zvyraznena sprava']"
-          text-color="black"
-          bg-color="accent"
-        />
-
-        <div>
-          <q-chat-message
-            avatar="https://cdn.quasar.dev/img/avatar5.jpg"
-            bg-color="grey"
-            name="Jane"
+        <div class="q-pa-md">
+          <q-infinite-scroll
+            @load="onLoad"
+            reverse
+            style="overflow: auto; height: 90%; box-sizing: content-box"
           >
-            <q-btn-dropdown
-              color="grey"
-              label="Jane is typing..."
-              menu-self="bottom start"
-            >
-              <q-list style="width: 300px">
-                <q-item clickable v-close-popup @click="onItemClick">
-                  <q-item-section>
-                    <q-item-label>nieco tajne pisem... nepozeraj</q-item-label>
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </q-btn-dropdown>
-          </q-chat-message>
+            <div v-for="message in messages" v-bind:key="message.id">
+              <q-chat-message
+                v-bind:key="message.id"
+                v-if="message.channelID == id_stranky"
+                :name="message.name"
+                :avatar="message.avatar"
+                :text="[message.textMess]"
+                :sent="message.sent"
+                :bg-color="message.color"
+              />
+            </div>
+
+            <!-- <q-chat-message
+              name="Jane"
+              avatar="https://cdn.quasar.dev/img/avatar5.jpg"
+              :text="['@Alice159 zvyraznena sprava']"
+              text-color="black"
+              bg-color="accent"
+            /> -->
+
+            <!-- <div>
+              <q-chat-message
+                avatar="https://cdn.quasar.dev/img/avatar5.jpg"
+                bg-color="grey"
+                name="Jane"
+              >
+                <q-btn-dropdown
+                  color="grey"
+                  label="Jane is typing..."
+                  menu-self="bottom start"
+                >
+                  <q-list style="width: 300px">
+                    <q-item clickable v-close-popup @click="onItemClick">
+                      <q-item-section>
+                        <q-item-label
+                          >nieco tajne pisem... nepozeraj</q-item-label
+                        >
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-btn-dropdown>
+              </q-chat-message>
+            </div> -->
+          </q-infinite-scroll>
         </div>
       </div>
     </div>
 
-    <q-input
-      bottom-slots
-      v-model="inputText"
-      label="Message"
-      counter
-      :dense="dense"
-      class="messageInput"
-      @keyup.enter="send"
-    >
-      <template v-slot:before>
-        <q-avatar>
-          <img src="https://cdn.quasar.dev/img/avatar3.jpg" />
-        </q-avatar>
-      </template>
+    <q-page-sticky position="bottom" expand>
+      <command-line class="commandLine">
+        <q-input
+          bottom-slots
+          v-model="inputText"
+          label="Message"
+          counter
+          :dense="dense"
+          class="messageInput"
+          @keyup.enter="send"
+        >
+          <template v-slot:before>
+            <q-avatar>
+              <img src="https://cdn.quasar.dev/img/avatar3.jpg" />
+            </q-avatar>
+          </template>
 
-      <template v-slot:append>
-        <q-icon
-          v-if="inputText !== ''"
-          name="close"
-          @click="inputText = ''"
-          class="cursor-pointer"
-        />
-      </template>
+          <template v-slot:append>
+            <q-icon
+              v-if="inputText !== ''"
+              name="close"
+              @click="inputText = ''"
+              class="cursor-pointer"
+            />
+          </template>
 
-      <template v-slot:after>
-        <q-btn @click="send" round dense flat icon="send" />
-      </template>
-    </q-input>
+          <template v-slot:after>
+            <q-btn
+              @click="showNotif('bottom-right', inputText)"
+              round
+              dense
+              flat
+              icon="send"
+            />
+          </template>
+        </q-input>
+      </command-line>
+    </q-page-sticky>
   </q-page>
 </template>
 
 <script>
 import { ref } from 'vue';
+import { useQuasar } from 'quasar';
+
+const alerts = [{ color: 'teal', message: 'Notification', icon: 'tag_faces' }];
 
 let messages = [
   {
@@ -151,7 +143,54 @@ let messages = [
 ];
 
 export default {
-  // id_stranky: this.$route.fullPath.slice(1),
+  setup() {
+    const items = ref([{}, {}, {}, {}, {}, {}, {}]);
+    const $q = useQuasar();
+
+    return {
+      items,
+      onLoad(index, done) {
+        setTimeout(() => {
+          items.value.splice(0, 0, {}, {}, {}, {}, {}, {}, {});
+          done();
+        }, 0);
+      },
+
+      showNotif(position, text) {
+        const { color, textColor, multiLine, icon, message, avatar } =
+          alerts[0];
+
+        const buttonColor = color ? 'white' : void 0;
+
+        $q.notify({
+          color,
+          textColor,
+          icon: icon,
+          message: text === '' ? message : text,
+          position,
+          avatar,
+          multiLine,
+          actions: [
+            {
+              label: 'Reply',
+              color: buttonColor,
+              handler: () => {
+                console.log('reply');
+              },
+            },
+            {
+              label: 'Dismiss',
+              color: 'yellow',
+              handler: () => {
+                console.log('dismiss');
+              },
+            },
+          ],
+          timeout: 3000,
+        });
+      },
+    };
+  },
 
   data() {
     return {
@@ -163,7 +202,13 @@ export default {
     };
   },
 
-  computed: {},
+  watch: {
+    $route() {
+      console.log('cfyhbjnkml,');
+      this.id_stranky = this.$route.fullPath.slice(1);
+      console.log('nieco,');
+    },
+  },
 
   // created() {
   //   let id = this.$route.fullPath;
@@ -183,6 +228,7 @@ export default {
         textMess: messageText,
         color: 'blue',
         sent: true,
+        channelID: this.id_stranky,
       };
       messages.push(obj);
 
@@ -207,5 +253,16 @@ export default {
   vertical-align: middle;
   height: 2em;
   width: 2em;
+}
+
+.skuska {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 85fr 15fr;
+  width: 100%;
+}
+
+.chatbox {
+  grid-row: 1/2;
 }
 </style>

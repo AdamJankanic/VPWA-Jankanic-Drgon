@@ -24,7 +24,7 @@
           </q-toolbar>
 
           <q-toolbar-title class="absolute-center vertical-top">
-            Slack
+            {{ displayName }}
           </q-toolbar-title>
         </q-toolbar>
       </q-header>
@@ -47,11 +47,21 @@
             </q-item-section>
 
             <q-item-section>
-              <q-icon name="done" color="green" size="md" />
+              <q-icon
+                name="done"
+                color="green"
+                size="md"
+                @click="print('Accept')"
+              />
             </q-item-section>
 
             <q-item-section>
-              <q-icon name="close" color="red" size="md" />
+              <q-icon
+                name="close"
+                color="red"
+                size="md"
+                @click="print('Decline')"
+              />
             </q-item-section>
           </q-item>
 
@@ -61,7 +71,7 @@
             class="q-my-sm"
             clickable
             v-ripple
-            @click="prepniSa(channel.id.toString())"
+            @click="changePage(channel.id.toString(), channel.name)"
           >
             <q-item-section avatar>
               <q-avatar color="primary" text-color="white">
@@ -208,7 +218,7 @@
               </q-item-section>
 
               <q-item-section side>
-                <q-icon name="chat_bubble" color="grey" />
+                <q-icon name="chat_bubble" :color="contact.active" />
               </q-item-section>
             </q-item>
           </q-list>
@@ -400,12 +410,14 @@ const users = [
     name: 'Brunhilde Panswick',
     email: 'bpanswick4@csmonitor.com',
     avatar: 'avatar2.jpg',
+    active: 'green',
   },
   {
     id: 6,
     name: 'Winfield Stapforth',
     email: 'wstapforth5@pcworld.com',
     avatar: 'avatar6.jpg',
+    active: 'grey',
   },
 ];
 
@@ -414,6 +426,7 @@ export default {
   data() {
     return {
       channels,
+      displayName: 'Slack',
     };
   },
   setup() {
@@ -433,6 +446,9 @@ export default {
   },
 
   methods: {
+    print(text) {
+      console.log(text);
+    },
     logout() {
       this.$router.push('/auth');
     },
@@ -441,12 +457,13 @@ export default {
       console.log(channels);
       console.log(index);
     },
-    prepniSa(kam) {
+    changePage(to, channel_name) {
+      this.displayName = channel_name;
       console.log('klikol si');
-      console.log(kam);
-      this.$router.push('/');
-      sleep(1);
-      this.$router.push(kam);
+      console.log(to);
+      // this.$router.push('/');
+      // sleep(1);
+      this.$router.push(to);
     },
   },
 };
