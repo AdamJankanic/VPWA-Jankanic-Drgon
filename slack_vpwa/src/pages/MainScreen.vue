@@ -31,19 +31,20 @@
         bg-color="primary"
       />
     </div> -->
-    
-    <div style="width: 100%; overflow: auto;">
-      <div class="q-pa-md">
-        <q-chat-message
-          v-for="message in messages"
-          v-bind:key="message.id"
-          :name="message.name"
-          :avatar="message.avatar"
-          :text="[message.textMess]"
-          :sent="message.sent"
-          :bg-color="message.color"
-        />
 
+    <div style="width: 100%; overflow: auto">
+      <div class="q-pa-md">
+        <div v-for="message in messages" v-bind:key="message.id">
+          <q-chat-message
+            v-bind:key="message.id"
+            v-if="message.channelID == id_stranky"
+            :name="message.name"
+            :avatar="message.avatar"
+            :text="[message.textMess]"
+            :sent="message.sent"
+            :bg-color="message.color"
+          />
+        </div>
         <q-chat-message
           name="Jane"
           avatar="https://cdn.quasar.dev/img/avatar5.jpg"
@@ -53,9 +54,17 @@
         />
 
         <div>
-          <q-chat-message avatar="https://cdn.quasar.dev/img/avatar5.jpg" bg-color="grey" name="Jane">
-            <q-btn-dropdown color="grey" label="Jane is typing..."  menu-self="bottom start">
-              <q-list style="width: 300px;">
+          <q-chat-message
+            avatar="https://cdn.quasar.dev/img/avatar5.jpg"
+            bg-color="grey"
+            name="Jane"
+          >
+            <q-btn-dropdown
+              color="grey"
+              label="Jane is typing..."
+              menu-self="bottom start"
+            >
+              <q-list style="width: 300px">
                 <q-item clickable v-close-popup @click="onItemClick">
                   <q-item-section>
                     <q-item-label>nieco tajne pisem... nepozeraj</q-item-label>
@@ -63,9 +72,8 @@
                 </q-item>
               </q-list>
             </q-btn-dropdown>
-        </q-chat-message>
+          </q-chat-message>
         </div>
-
       </div>
     </div>
 
@@ -131,24 +139,42 @@ let messages = [
     color: 'grey',
     channelID: 1,
   },
+  {
+    id: 4,
+    name: 'Miro Satan',
+    avatar: 'https://cdn.quasar.dev/img/avatar2.jpg',
+    textMess: 'Jojka Markiza',
+    sent: false,
+    color: 'red',
+    channelID: 2,
+  },
 ];
 
 export default {
+  // id_stranky: this.$route.fullPath.slice(1),
+
   data() {
     return {
       inputText: ref(''),
       ph: ref(''),
       dense: ref(false),
       messages,
+      id_stranky: this.$route.fullPath.slice(1),
     };
   },
+
+  computed: {},
+
+  // created() {
+  //   let id = this.$route.fullPath;
+  // },
 
   methods: {
     send() {
       let messageText = this.inputText;
-      if (messageText === ''){
-        return
-      };
+      if (messageText === '') {
+        return;
+      }
       this.inputText = '';
       let obj = {
         id: 4,

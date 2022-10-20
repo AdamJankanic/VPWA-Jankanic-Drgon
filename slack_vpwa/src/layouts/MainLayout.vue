@@ -13,9 +13,9 @@
               class="absolute-right"
             />
 
-            <q-btn 
+            <q-btn
               flat
-              @click="createGroup=true"
+              @click="createGroup = true"
               round
               dense
               icon="add"
@@ -36,13 +36,10 @@
         :breakpoint="500"
         side="left"
       >
-
         <q-list bordered style="overflow: auto; height: calc(100% - 80px)">
-          <q-item style="background-color: grey;">
+          <q-item style="background-color: grey">
             <q-item-section avatar>
-              <q-avatar color="primary" text-color="white">
-                S
-              </q-avatar>
+              <q-avatar color="primary" text-color="white"> S </q-avatar>
             </q-item-section>
 
             <q-item-section>
@@ -50,20 +47,21 @@
             </q-item-section>
 
             <q-item-section>
-              <q-icon name=done color="green" size="md"/>
+              <q-icon name="done" color="green" size="md" />
             </q-item-section>
 
             <q-item-section>
-              <q-icon name=close color="red" size="md"/>
+              <q-icon name="close" color="red" size="md" />
             </q-item-section>
           </q-item>
 
           <q-item
-            v-for="(channel,index) in channels"
+            v-for="(channel, index) in channels"
             v-bind:key="channel.id"
             class="q-my-sm"
             clickable
             v-ripple
+            @click="prepniSa(channel.id.toString())"
           >
             <q-item-section avatar>
               <q-avatar color="primary" text-color="white">
@@ -76,12 +74,12 @@
             </q-item-section>
 
             <q-item-section>
-              <q-icon  v-if="channel.public" name=people />
-              <q-icon  v-else name=lock />
+              <q-icon v-if="channel.public" name="people" />
+              <q-icon v-else name="lock" />
             </q-item-section>
 
             <q-item-section>
-              <q-icon @click="leaveChannel(index)" name=delete />
+              <q-icon @click="leaveChannel(index)" name="delete" />
             </q-item-section>
           </q-item>
         </q-list>
@@ -102,7 +100,7 @@
               color="grey"
             />
           </div>
-          <button @click = "logout" class="btn two_rows">Log Out</button> 
+          <button @click="logout" class="btn two_rows">Log Out</button>
         </div>
       </q-drawer>
 
@@ -114,7 +112,6 @@
 
           <q-card-section class="q-pt-none">
             <q-input outlined v-model="channelName" label="Channel name" />
-
 
             <div>
               <q-toggle
@@ -133,7 +130,7 @@
           </q-card-actions>
         </q-card>
       </q-dialog>
-      
+
       <q-dialog v-model="small">
         <q-card style="width: 500px">
           <q-card-section>
@@ -436,14 +433,21 @@ export default {
   },
 
   methods: {
-    logout(){
+    logout() {
       this.$router.push('/auth');
     },
-    leaveChannel(index){
+    leaveChannel(index) {
       this.channels.splice(index, 1);
       console.log(channels);
       console.log(index);
-    }
+    },
+    prepniSa(kam) {
+      console.log('klikol si');
+      console.log(kam);
+      this.$router.push('/');
+      sleep(1);
+      this.$router.push(kam);
+    },
   },
 };
 </script>
