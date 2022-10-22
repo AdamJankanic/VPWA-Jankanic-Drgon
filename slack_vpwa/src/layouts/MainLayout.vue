@@ -6,20 +6,19 @@
           <q-toolbar>
             <q-btn
               flat
+              @click="drawerOn = !drawerOn"
+              round
+              dense
+              icon="menu"
+              class="absolute-left"
+            />
+            <q-btn
+              flat
               @click="drawer = !drawer"
               round
               dense
               icon="menu"
               class="absolute-right"
-            />
-
-            <q-btn
-              flat
-              @click="createGroup = true"
-              round
-              dense
-              icon="add"
-              class="absoulte-left"
             />
           </q-toolbar>
 
@@ -29,14 +28,12 @@
         </q-toolbar>
       </q-header>
 
-      <q-drawer
-        v-model="drawerOn"
-        show-if-above
-        :width="300"
-        :breakpoint="500"
-        side="left"
-      >
-        <q-list bordered style="overflow: auto; height: calc(100% - 80px)">
+      <q-drawer v-model="drawerOn" :width="300" :breakpoint="800" side="left">
+        <q-btn flat @click="createGroup = true" round dense icon="add">
+          Add channel</q-btn
+        >
+
+        <q-list bordered style="overflow: auto; height: calc(100% - 115px)">
           <q-item style="background-color: grey">
             <q-item-section avatar>
               <q-avatar color="primary" text-color="white"> S </q-avatar>
@@ -94,23 +91,36 @@
           </q-item>
         </q-list>
 
-        <div class="flex absolute-bottom profile">
-          <q-avatar size="xl" class="two_rows">
-            <img :src="`https://cdn.quasar.dev/img/avatar3.jpg`" />
-          </q-avatar>
-          <div class="nickname">
-            <p>Alice159</p>
+        <div class="flex shadow-up-10 profile">
+          <div
+            class="flex justify-around items-center full-width q-pl-md q-pr-md"
+          >
+            <q-avatar size="xl">
+              <img :src="`https://cdn.quasar.dev/img/avatar3.jpg`" />
+            </q-avatar>
+            <div class="nickname">
+              <p class="q-mb-none text-bold">Alice159</p>
+            </div>
           </div>
-          <div class="icons">
-            <q-icon size="md" name="chat_bubble" color="green" />
-            <q-icon
-              @click="small = true"
-              size="md"
-              name="settings"
-              color="grey"
-            />
+          <div
+            class="flex justify-around items-center full-width q-pl-md q-pr-md"
+          >
+            <div class="icons">
+              <q-icon
+                size="md"
+                name="chat_bubble"
+                class="q-mr-xs"
+                :class="status"
+              />
+              <q-icon
+                @click="small = true"
+                size="md"
+                name="settings"
+                color="grey"
+              />
+            </div>
+            <q-btn @click="logout" class="btn two-rows">Log Out</q-btn>
           </div>
-          <button @click="logout" class="btn two_rows">Log Out</button>
         </div>
       </q-drawer>
 
@@ -193,12 +203,15 @@
         v-model="drawer"
         show-if-above
         :width="300"
-        :breakpoint="500"
+        :breakpoint="1045"
         side="right"
         bordered
+        style="overflow: none"
       >
-        <q-toolbar-title class="top-center">Users</q-toolbar-title>
-        <q-scroll-area class="fit">
+        <!-- <q-toolbar-title class="top-center">Users</q-toolbar-title> -->
+        <p class="users">Users</p>
+
+        <q-scroll-area class="fit" style="height: 85vh !important">
           <q-list>
             <q-item
               v-for="contact in users"
@@ -419,7 +432,79 @@ const users = [
     avatar: 'avatar6.jpg',
     active: 'grey',
   },
+  {
+    id: 5,
+    name: 'Brunhilde Panswick',
+    email: 'bpanswick4@csmonitor.com',
+    avatar: 'avatar2.jpg',
+    active: 'green',
+  },
+  {
+    id: 6,
+    name: 'Winfield Stapforth',
+    email: 'wstapforth5@pcworld.com',
+    avatar: 'avatar6.jpg',
+    active: 'grey',
+  },
+  {
+    id: 5,
+    name: 'Brunhilde Panswick',
+    email: 'bpanswick4@csmonitor.com',
+    avatar: 'avatar2.jpg',
+    active: 'green',
+  },
+  {
+    id: 6,
+    name: 'Winfield Stapforth',
+    email: 'wstapforth5@pcworld.com',
+    avatar: 'avatar6.jpg',
+    active: 'grey',
+  },
+  {
+    id: 5,
+    name: 'Brunhilde Panswick',
+    email: 'bpanswick4@csmonitor.com',
+    avatar: 'avatar2.jpg',
+    active: 'green',
+  },
+  {
+    id: 6,
+    name: 'Winfield Stapforth',
+    email: 'wstapforth5@pcworld.com',
+    avatar: 'avatar6.jpg',
+    active: 'grey',
+  },
+  {
+    id: 5,
+    name: 'Brunhilde Panswick',
+    email: 'bpanswick4@csmonitor.com',
+    avatar: 'avatar2.jpg',
+    active: 'green',
+  },
+  {
+    id: 6,
+    name: 'Winfield Stapforth',
+    email: 'wstapforth5@pcworld.com',
+    avatar: 'avatar6.jpg',
+    active: 'grey',
+  },
+  {
+    id: 5,
+    name: 'Brunhilde Panswick',
+    email: 'bpanswick4@csmonitor.com',
+    avatar: 'avatar2.jpg',
+    active: 'green',
+  },
+  {
+    id: 6,
+    name: 'Winfield Stapforth',
+    email: 'wstapforth5@pcworld.com',
+    avatar: 'avatar6.jpg',
+    active: 'grey',
+  },
 ];
+
+let status = 'online';
 
 export default {
   computed: {},
@@ -427,6 +512,7 @@ export default {
     return {
       channels,
       displayName: 'Slack',
+      status,
     };
   },
   setup() {
@@ -470,27 +556,8 @@ export default {
 </script>
 
 <style scoped>
-.flex {
-  display: grid;
-  /* justify-content: space-around; */
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  align-items: center;
-  column-gap: 0px;
-}
-
 .flexbox {
   display: flex;
-}
-
-.two_rows {
-  grid-row: 1/-1;
-  align-self: center;
-}
-
-.btn.two_rows {
-  grid-column: 3/4;
-  cursor: pointer;
 }
 
 .icons {
@@ -508,8 +575,20 @@ export default {
 }
 
 .profile {
-  background-color: red;
-  width: 300px;
-  grid-row: 1/-1;
+  background-color: #d9d9d9;
+}
+
+.online {
+  color: #4bb543;
+}
+.dnd {
+  color: #ff8000;
+}
+.offline {
+  color: grey;
+}
+
+.users {
+  font-size: 24px;
 }
 </style>

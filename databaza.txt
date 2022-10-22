@@ -1,0 +1,54 @@
+Table Users {
+  id integer [pk, increment]
+  name varchar(30)
+  surname varchar(30)
+  nickname varchar(30) 
+  email varchar(50)
+  password hash(255)
+  isOnline boolean
+  dnd boolean
+  mentions boolean
+  created_at datetime
+  updated_at datetime
+  
+}
+
+Ref: Users.id < Channel_Users.id_user
+Ref: Channels.id < Channel_Users.id_channel
+
+
+Table Channels{
+  id integer [pk, increment]
+  name varchar(50)
+  private boolean
+  created_at datetime
+  updated_at datetime
+  id_admin integer
+}
+
+Table Channel_Users{
+  id integer [pk, increment]
+  id_user integer
+  id_channel integer
+  kick_count integer
+  kicked boolean
+  kicked_at datetime
+  joined_at datetime
+  created_at datetime
+  updated_at datetime
+  isInvited boolean
+  
+}
+
+Table Messages{
+  id integer [pk, increment]
+  id_sender integer
+  id_channel integer
+  text varchar(255)
+  created_at datetime
+  
+}
+
+ref: Messages.id_sender > Users.id
+ref: Messages.id_channel > Channels.id
+

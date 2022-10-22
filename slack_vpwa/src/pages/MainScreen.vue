@@ -1,6 +1,9 @@
 <template>
   <q-page class="row items-center justify-evenly skuska">
-    <div class="chatbox" style="width: 100%; overflow: auto">
+    <div
+      class="chatbox"
+      style="width: 100%; overflow: auto; height: 100%; max-height: 90vh"
+    >
       <div class="q-pa-md">
         <div class="q-pa-md">
           <q-infinite-scroll
@@ -56,43 +59,45 @@
       </div>
     </div>
 
-    <q-page-sticky position="bottom" expand>
-      <command-line class="commandLine">
-        <q-input
-          bottom-slots
-          v-model="inputText"
-          label="Message"
-          counter
-          :dense="dense"
-          class="messageInput"
-          @keyup.enter="send"
-        >
-          <template v-slot:before>
-            <q-avatar>
-              <img src="https://cdn.quasar.dev/img/avatar3.jpg" />
-            </q-avatar>
-          </template>
+    <q-page-sticky
+      position="bottom"
+      expand
+      style="height: 100%; max-height: 10vh"
+    >
+      <q-input
+        bottom-slots
+        v-model="inputText"
+        label="Message"
+        counter
+        :dense="dense"
+        class="messageInput"
+        @keyup.enter="send"
+      >
+        <template v-slot:before>
+          <q-avatar>
+            <img src="https://cdn.quasar.dev/img/avatar3.jpg" />
+          </q-avatar>
+        </template>
 
-          <template v-slot:append>
-            <q-icon
-              v-if="inputText !== ''"
-              name="close"
-              @click="inputText = ''"
-              class="cursor-pointer"
-            />
-          </template>
+        <template v-slot:append>
+          <q-icon
+            v-if="inputText !== ''"
+            name="close"
+            @click="inputText = ''"
+            class="cursor-pointer"
+          />
+        </template>
 
-          <template v-slot:after>
-            <q-btn
-              @click="showNotif('bottom-right', inputText)"
-              round
-              dense
-              flat
-              icon="send"
-            />
-          </template>
-        </q-input>
-      </command-line>
+        <template v-slot:after>
+          <q-btn
+            @click="showNotif('bottom-right', inputText)"
+            round
+            dense
+            flat
+            icon="send"
+          />
+        </template>
+      </q-input>
     </q-page-sticky>
   </q-page>
 </template>
@@ -238,7 +243,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .messageInput {
   background-color: #951357;
   width: 100%;
