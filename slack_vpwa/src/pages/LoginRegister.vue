@@ -190,7 +190,7 @@ export default {
 
       onSubmit() {
         if (accept.value !== true) {
-          console.log('4nnjinijnijwnhivhnvnhavnani');
+          console.log('submit');
           $q.notify({
             color: 'red-5',
             textColor: 'white',
