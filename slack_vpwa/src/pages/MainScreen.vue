@@ -23,15 +23,15 @@
               />
             </div>
 
-            <!-- <q-chat-message
+            <q-chat-message
               name="Jane"
               avatar="https://cdn.quasar.dev/img/avatar5.jpg"
               :text="['@Alice159 zvyraznena sprava']"
               text-color="black"
               bg-color="accent"
-            /> -->
+            />
 
-            <!-- <div>
+            <div>
               <q-chat-message
                 avatar="https://cdn.quasar.dev/img/avatar5.jpg"
                 bg-color="grey"
@@ -53,7 +53,7 @@
                   </q-list>
                 </q-btn-dropdown>
               </q-chat-message>
-            </div> -->
+            </div>
           </q-infinite-scroll>
         </div>
       </div>
@@ -90,7 +90,7 @@
 
         <template v-slot:after>
           <q-btn
-            @click="showNotif('bottom-right', inputText)"
+            @click="showNotif('bottom-right', 'Jane: ' + inputText)"
             round
             dense
             flat
