@@ -14,16 +14,19 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/LoginRegisterLayout.vue'),
     children: [
       // { path: '', component: () => import('pages/LoginRegister.vue') },
-      { path: 'register', name: 'register', meta: { guestOnly: true }, component: () => import('pages/RegisterPage.vue') },
-      { path: 'login', name: 'login', meta: { guestOnly: true }, component: () => import('pages/LoginPage.vue') },
+      {
+        path: 'register',
+        name: 'register',
+        meta: { guestOnly: true },
+        component: () => import('pages/RegisterPage.vue'),
+      },
+      {
+        path: 'login',
+        name: 'login',
+        meta: { guestOnly: true },
+        component: () => import('pages/LoginPage.vue'),
+      },
     ],
-  },
-
-  // Always leave this as last one,
-  // but you can also remove it
-  {
-    path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue'),
   },
 
   {
@@ -32,8 +35,19 @@ const routes: RouteRecordRaw[] = [
     // meta: { requiresAuth: true },
     component: () => import('layouts/ChatLayout.vue'),
     children: [
-      { path: '', name: 'home', component: () => import('src/pages/ChannelPage.vue') }
-    ]
+      {
+        path: '',
+        name: 'home',
+        component: () => import('src/pages/ChannelPage.vue'),
+      },
+    ],
+  },
+
+  // Always leave this as last one,
+  // but you can also remove it
+  {
+    path: '/:catchAll(.*)*',
+    component: () => import('pages/ErrorNotFound.vue'),
   },
 ];
 
