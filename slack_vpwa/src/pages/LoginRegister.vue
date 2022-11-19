@@ -70,6 +70,8 @@
               </q-form>
             </q-tab-panel>
 
+
+            <!-- register -->
             <q-tab-panel name="register">
               <div class="text-h6">REGISTER</div>
               <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
@@ -88,6 +90,7 @@
                   v-model="remail"
                   label="Email"
                   lazy-rules
+                  type="email"
                   :rules="[
                     (val) => (val && val.length > 0) || 'Please type something',
                   ]"

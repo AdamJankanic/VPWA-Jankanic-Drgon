@@ -16,7 +16,7 @@ import { Quasar } from 'quasar'
 import { markRaw } from 'vue'
 import RootComponent from 'app/src/App.vue'
 
-import createStore from 'app/src/store/index'
+import createStore from 'app/src/store/index.ts'
 import createRouter from 'app/src/router/index'
 
 
@@ -45,7 +45,7 @@ export default async function (createAppFn, quasarUserOptions) {
 
     
       // obtain Vuex injection key in case we use TypeScript
-      const { storeKey } = await import('app/src/store/index')
+      const { storeKey } = await import('app/src/store/index.ts')
     
   
 

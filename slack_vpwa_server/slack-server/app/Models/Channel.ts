@@ -3,13 +3,6 @@ import { BaseModel, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import Message from 'App/Models/Message'
 
 export default class Channel extends BaseModel {
-  @manyToMany(() => Channel, {
-    pivotTable: 'channel_users',
-    pivotForeignKey: 'user_id',
-    pivotRelatedForeignKey: 'channel_id',
-    pivotTimestamps: true,
-  })
-  public channels: ManyToMany<typeof Channel>
 
   @column({ isPrimary: true })
   public id: number

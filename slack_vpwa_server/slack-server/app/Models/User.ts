@@ -18,6 +18,14 @@ export default class User extends BaseModel {
   })
   public sentMessages: HasMany<typeof Message>
 
+  @manyToMany(() => Channel, {
+    pivotTable: 'channel_users',
+    pivotForeignKey: 'user_id',
+    pivotRelatedForeignKey: 'channel_id',
+    pivotTimestamps: true,
+  })
+  public channels: ManyToMany<typeof Channel>
+
   @column({ isPrimary: true })
   public id: number
 
