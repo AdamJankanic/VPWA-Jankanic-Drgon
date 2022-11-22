@@ -1,11 +1,11 @@
-import { boot } from 'quasar/wrappers'
-import axios, { AxiosInstance } from 'axios'
-import { authManager } from 'src/services'
+import { boot } from 'quasar/wrappers';
+import axios, { AxiosInstance } from 'axios';
+import { authManager } from 'src/services';
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
-    $axios: AxiosInstance
-    $api: AxiosInstance
+    $axios: AxiosInstance;
+    $api: AxiosInstance;
   }
 }
 
@@ -18,62 +18,65 @@ declare module '@vue/runtime-core' {
 const api = axios.create({
   baseURL: process.env.API_URL,
   withCredentials: true,
-  headers: {}
-})
+  headers: {},
+});
 
-const DEBUG = process.env.NODE_ENV === 'development'
+const DEBUG = process.env.NODE_ENV === 'development';
 
 // add interceptor to add authorization header for api calls
 api.interceptors.request.use(
   (config) => {
-    const token = authManager.getToken()
+    const token = authManager.getToken();
 
-    if (token !== null && config.headers != undefined) {
-      config.headers.Authorization = `Bearer ${token}`
+    if (token !== null && config.headers !== undefined) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
 
     if (DEBUG) {
-      console.info('-> ', config)
+      console.info('-> ', config);
     }
 
-    return config
+    return config;
   },
   (error) => {
     if (DEBUG) {
-      console.error('-> ', error)
+      console.error('-> ', error);
     }
 
-    return Promise.reject(error)
+    return Promise.reject(error);
   }
-)
+);
 
 // add interceptor for response to trigger logout
 api.interceptors.response.use(
   (response) => {
     if (DEBUG) {
-      console.info('<- ', response)
+      console.info('<- ', response);
     }
 
-    return response
+    return response;
   },
   (error) => {
     if (DEBUG) {
-      console.error('<- ', error.response)
+      console.error('<- ', error.response);
     }
 
     // server api request returned unathorized response so we trrigger logout
-    if (error.response.status === 401 && !error.response.config.dontTriggerLogout) {
-      authManager.logout()
+    if (
+      error.response.status === 401 &&
+      !error.response.config.dontTriggerLogout
+    ) {
+      authManager.logout();
     }
 
-    return Promise.reject(error)
+    return Promise.reject(error);
   }
-)
+);
 
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
-  app.config.globalProperties.$axios = axios
-  app.config.globalProperties.$api = api
-})
+  app.config.globalProperties.$axios = axios;
+  app.config.globalProperties.$api = api;
+});
 
-export { api }
+export { api };

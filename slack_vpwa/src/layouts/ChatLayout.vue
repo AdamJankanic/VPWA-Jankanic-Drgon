@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="WAL position-relative bg-grey-4"
-    :style="{ height: $q.screen.height + 'px' }"
-  >
+  <div class="WAL position-relative bg-grey-4" :style="{ height: $q.screen.height + 'px' }">
     <q-layout view="lHh Lpr lFf" class="WAL__layout shadow-3" container>
       <q-header elevated>
         <q-toolbar class="bg-grey-3 text-black">
@@ -76,8 +73,8 @@
 
               <q-item-section side>
                 <!--q-item-label caption>
-                    {{ channel }}
-                  </q-item-label-->
+                  {{ channel }}
+                </q-item-label-->
                 <q-icon name="keyboard_arrow_down" />
               </q-item-section>
             </q-item>
@@ -91,17 +88,7 @@
 
       <q-footer>
         <q-toolbar class="bg-grey-3 text-black row">
-          <q-input
-            v-model="message"
-            :disable="loading"
-            @keydown.enter.prevent="send"
-            rounded
-            outlined
-            dense
-            class="WAL__field col-grow q-mr-sm"
-            bg-color="white"
-            placeholder="Type a message"
-          />
+          <q-input v-model="message" :disable="loading" @keydown.enter.prevent="send" rounded outlined dense class="WAL__field col-grow q-mr-sm" bg-color="white" placeholder="Type a message" />
           <q-btn :disable="loading" @click="send" round flat icon="send" />
         </q-toolbar>
       </q-footer>
@@ -110,44 +97,41 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { defineComponent } from 'vue'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default defineComponent({
   name: 'ChatLayout',
-  data() {
+  data () {
     return {
       leftDrawerOpen: false,
       message: '',
-      loading: false,
-    };
+      loading: false
+    }
   },
   computed: {
     ...mapGetters('channels', {
       channels: 'joinedChannels',
-      lastMessageOf: 'lastMessageOf',
+      lastMessageOf: 'lastMessageOf'
     }),
-    activeChannel() {
-      return this.$store.state.channels.active;
-    },
+    activeChannel () {
+      return this.$store.state.channels.active
+    }
   },
   methods: {
-    async send() {
-      this.loading = true;
-      await this.addMessage({
-        channel: this.activeChannel,
-        message: this.message,
-      });
-      this.message = '';
-      this.loading = false;
+    async send () {
+      this.loading = true
+      await this.addMessage({ channel: this.activeChannel, message: this.message })
+      this.message = ''
+      this.loading = false
     },
     ...mapMutations('channels', {
-      setActiveChannel: 'SET_ACTIVE',
+      setActiveChannel: 'SET_ACTIVE'
     }),
     ...mapActions('auth', ['logout']),
-    ...mapActions('channels', ['addMessage']),
-  },
-});
+    ...mapActions('channels', ['addMessage'])
+  }
+})
 </script>
 
 <style lang="sass">

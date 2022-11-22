@@ -32,7 +32,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/channels',
     // channels requires auth
-    // meta: { requiresAuth: true },
+    meta: { requiresAuth: true },
     component: () => import('layouts/ChatLayout.vue'),
     children: [
       {

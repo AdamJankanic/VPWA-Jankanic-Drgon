@@ -1,18 +1,15 @@
 import { store } from 'quasar/wrappers'
 import { InjectionKey } from 'vue'
-import { Router } from 'vue-router'
-import auth from './module-auth'
-import type { AuthStateInterface } from './module-auth/state'
-import channels from './module-channels'
-import type { ChannelsStateInterface } from './module-channels/state'
 import {
   createStore,
   Store as VuexStore,
-  useStore as vuexUseStore,
+  useStore as vuexUseStore
 } from 'vuex'
 
-// import example from './module-example'
-// import { ExampleStateInterface } from './module-example/state';
+import auth from './module-auth'
+import channels from './module-channels'
+import type { AuthStateInterface } from './module-auth/state'
+import type { ChannelsStateInterface } from './module-channels/state'
 
 /*
  * If not building with SSR mode, you can
@@ -24,6 +21,9 @@ import {
  */
 
 export interface StateInterface {
+  // Define your own store structure, using submodules if needed
+  // example: ExampleStateInterface;
+  // Declared as unknown to avoid linting issue. Best to strongly type as per the line above.
   auth: AuthStateInterface
   channels: ChannelsStateInterface
 }
@@ -38,13 +38,6 @@ declare module '@vue/runtime-core' {
 // provide typings for `useStore` helper
 export const storeKey: InjectionKey<VuexStore<StateInterface>> = Symbol('vuex-key')
 
-// Provide typings for `this.$router` inside Vuex store
- declare module 'vuex' {
-   export interface Store<S> {
-     readonly $router: Router;
-   }
- }
-
 export default store(function (/* { ssrContext } */) {
   const Store = createStore<StateInterface>({
     modules: {
@@ -57,12 +50,9 @@ export default store(function (/* { ssrContext } */) {
     strict: !!process.env.DEBUGGING
   })
 
-  return Store;
+  return Store
 })
 
-export function useStore() {
+export function useStore () {
   return vuexUseStore(storeKey)
 }
-
-
-
