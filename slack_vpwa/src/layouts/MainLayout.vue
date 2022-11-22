@@ -1,6 +1,6 @@
 <template>
   <q-layout view="hHh LpR fFf">
-    <div class="grid">
+    <div class="grid-box">
       <q-header elevated class="bg-primary text-white">
         <q-toolbar>
           <q-toolbar>
@@ -24,6 +24,7 @@
 
           <q-toolbar-title class="absolute-center vertical-top">
             {{ displayName }}
+            <!-- {{ width_input }} -->
           </q-toolbar-title>
         </q-toolbar>
       </q-header>
@@ -105,7 +106,7 @@
                   {{ channel }}
                 </q-item-label>
                 <q-item-label class="conversation__summary" caption>
-                  {{ lastMessageOf(channel)?.content || '' }}
+                  <!-- {{ lastMessageOf(channel)?.content || '' }} -->
                 </q-item-label>
               </q-item-section>
 
@@ -267,11 +268,26 @@
       </q-drawer>
 
       <q-page-container> <router-view></router-view> </q-page-container>
-      <!-- <q-page-container> <h1>AHjigwniakfmop</h1> </q-page-container> -->
     </div>
 
-    <q-footer>
-      <q-toolbar class="bg-grey-3 text-black row">
+    <!-- <q-footer>
+      <q-toolbar
+        class="bg-grey-3 text-black row fixed-bottom"
+        :style="{
+          left: [drawerOn ? 300 : 0] + 'px',
+          // width:
+          //   [
+          //     [drawerOn && drawer]
+          //       ? $q.screen.width - 2 * 300
+          //       : [drawerOn && !drawer]
+          //       ? $q.screen.width - 300
+          //       : [!drawerOn && drawer]
+          //       ? $q.screen.width - 300
+          //       : $q.screen.width,
+          //     ,
+          //   ] + 'px',
+        }"
+      >
         <q-input
           v-model="message"
           :disable="loading"
@@ -285,7 +301,7 @@
         />
         <q-btn :disable="loading" @click="send" round flat icon="send" />
       </q-toolbar>
-    </q-footer>
+    </q-footer> -->
   </q-layout>
 </template>
 
@@ -463,6 +479,7 @@ export default {
       return this.$store.state.channels.active;
     },
   },
+
   data() {
     return {
       displayName: 'Slack',
@@ -523,6 +540,11 @@ export default {
 <style scoped>
 .flexbox {
   display: flex;
+}
+
+.grid-box {
+  /* display: grid; */
+  /* grid-template-columns: 300px 1fr 300px; */
 }
 
 .icons {

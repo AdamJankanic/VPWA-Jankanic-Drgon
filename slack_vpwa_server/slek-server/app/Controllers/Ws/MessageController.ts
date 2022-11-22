@@ -10,9 +10,10 @@ import { inject } from '@adonisjs/core/build/standalone'
 // implementation is bind into container inside providers/AppProvider.ts
 @inject(['Repositories/MessageRepository'])
 export default class MessageController {
-  constructor (private messageRepository: MessageRepositoryContract) {}
+  constructor(private messageRepository: MessageRepositoryContract) {}
 
   public async loadMessages({ params }: WsContextContract) {
+    console.log(this.messageRepository)
     return this.messageRepository.getAll(params.name)
   }
 
@@ -22,5 +23,15 @@ export default class MessageController {
     socket.broadcast.emit('message', message)
     // return message to sender
     return message
+  }
+
+  public async loadMoreMessages({ params, socket }: WsContextContract, lastMessageId: number) {
+    console.log(params.name + ' ' + lastMessageId)
+    const messages = await this.messageRepository.getMore(params.name, lastMessageId)
+    console.log(messages)
+    // broadcast message to other users in channel
+    // socket.broadcast.emit('message', message)
+    // return message to sender
+    return messages
   }
 }
