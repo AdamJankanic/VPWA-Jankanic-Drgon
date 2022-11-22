@@ -32,7 +32,7 @@
         <q-btn flat @click="createGroup = true" round dense icon="add">
           Add channel</q-btn
         >
-
+        <!-- 
         <q-list bordered style="overflow: auto; height: calc(100% - 115px)">
           <q-item style="background-color: grey">
             <q-item-section avatar>
@@ -89,7 +89,35 @@
               <q-icon @click="leaveChannel(index)" name="delete" />
             </q-item-section>
           </q-item>
-        </q-list>
+        </q-list> -->
+
+        <q-scroll-area style="height: calc(100% - 100px)">
+          <q-list>
+            <q-item
+              v-for="(channel, index) in channels"
+              :key="index"
+              clickable
+              v-ripple
+              @click="setActiveChannel(channel)"
+            >
+              <q-item-section>
+                <q-item-label lines="1">
+                  {{ channel }}
+                </q-item-label>
+                <q-item-label class="conversation__summary" caption>
+                  {{ lastMessageOf(channel)?.content || '' }}
+                </q-item-label>
+              </q-item-section>
+
+              <q-item-section side>
+                <!--q-item-label caption>
+                  {{ channel }}
+                </q-item-label-->
+                <q-icon name="keyboard_arrow_down" />
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-scroll-area>
 
         <div class="flex shadow-up-10 profile">
           <div
@@ -239,183 +267,102 @@
       </q-drawer>
 
       <q-page-container> <router-view></router-view> </q-page-container>
+      <!-- <q-page-container> <h1>AHjigwniakfmop</h1> </q-page-container> -->
     </div>
+
+    <q-footer>
+      <q-toolbar class="bg-grey-3 text-black row">
+        <q-input
+          v-model="message"
+          :disable="loading"
+          @keydown.enter.prevent="send"
+          rounded
+          outlined
+          dense
+          class="WAL__field col-grow q-mr-sm"
+          bg-color="white"
+          placeholder="Type a message"
+        />
+        <q-btn :disable="loading" @click="send" round flat icon="send" />
+      </q-toolbar>
+    </q-footer>
   </q-layout>
 </template>
 
 <script>
 import { ref } from 'vue';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
+// let channels = [
+//   {
+//     id: 1,
+//     name: 'VPWA',
+//     letter: 'V',
+//     public: true,
+//   },
+//   {
+//     id: 2,
+//     name: 'General',
+//     letter: 'G',
+//     public: false,
+//   },
+//   {
+//     id: 3,
+//     name: 'HaHa Room',
+//     letter: 'H',
+//     public: false,
+//   },
+//   {
+//     id: 4,
+//     name: 'HaHa Room1',
+//     letter: 'H',
+//     public: true,
+//   },
+//   {
+//     id: 5,
+//     name: 'HaHa Room2',
+//     letter: 'H',
+//     public: true,
+//   },
+//   {
+//     id: 6,
+//     name: 'HaHa Room3',
+//     letter: 'H',
+//     public: true,
+//   },
+//   {
+//     id: 7,
+//     name: 'HaHa Room4',
+//     letter: 'H',
+//     public: true,
+//   },
+//   {
+//     id: 8,
+//     name: 'HaHa Room5',
+//     letter: 'H',
+//     public: true,
+//   },
+//   {
+//     id: 9,
+//     name: 'HaHa Room6',
+//     letter: 'H',
+//     public: true,
+//   },
+//   {
+//     id: 10,
+//     name: 'HaHa Room7',
+//     letter: 'H',
+//     public: true,
+//   },
+//   {
+//     id: 11,
+//     name: 'HaHa Room8',
+//     letter: 'H',
+//     public: true,
+//   },
+//
+// ];
 
-let channels = [
-  {
-    id: 1,
-    name: 'VPWA',
-    letter: 'V',
-    public: true,
-  },
-  {
-    id: 2,
-    name: 'General',
-    letter: 'G',
-    public: false,
-  },
-  {
-    id: 3,
-    name: 'HaHa Room',
-    letter: 'H',
-    public: false,
-  },
-  {
-    id: 4,
-    name: 'HaHa Room1',
-    letter: 'H',
-    public: true,
-  },
-  {
-    id: 5,
-    name: 'HaHa Room2',
-    letter: 'H',
-    public: true,
-  },
-  {
-    id: 6,
-    name: 'HaHa Room3',
-    letter: 'H',
-    public: true,
-  },
-  {
-    id: 7,
-    name: 'HaHa Room4',
-    letter: 'H',
-    public: true,
-  },
-  {
-    id: 8,
-    name: 'HaHa Room5',
-    letter: 'H',
-    public: true,
-  },
-  {
-    id: 9,
-    name: 'HaHa Room6',
-    letter: 'H',
-    public: true,
-  },
-  {
-    id: 10,
-    name: 'HaHa Room7',
-    letter: 'H',
-    public: true,
-  },
-  {
-    id: 11,
-    name: 'HaHa Room8',
-    letter: 'H',
-    public: true,
-  },
-  {
-    id: 12,
-    name: 'HaHa Room9',
-    letter: 'H',
-    public: true,
-  },
-  {
-    id: 13,
-    name: 'HaHa Room10',
-    letter: 'H',
-    public: true,
-  },
-  {
-    id: 14,
-    name: 'HaHa Room11',
-    letter: 'H',
-    public: true,
-  },
-  {
-    id: 15,
-    name: 'HaHa Room12',
-    letter: 'H',
-    public: true,
-  },
-  {
-    id: 16,
-    name: 'HaHa Room13',
-    letter: 'H',
-    public: true,
-  },
-  {
-    id: 17,
-    name: 'HaHa Room14',
-    letter: 'H',
-    public: true,
-  },
-  {
-    id: 18,
-    name: 'HaHa Room15',
-    letter: 'H',
-    public: true,
-  },
-  {
-    id: 19,
-    name: 'HaHa Room16',
-    letter: 'H',
-    public: true,
-  },
-  {
-    id: 20,
-    name: 'HaHa Room17',
-    letter: 'H',
-    public: true,
-  },
-  {
-    id: 21,
-    name: 'HaHa Room18',
-    letter: 'H',
-    public: true,
-  },
-  {
-    id: 22,
-    name: 'HaHa Room19',
-    letter: 'H',
-    public: true,
-  },
-  {
-    id: 23,
-    name: 'HaHa Room20',
-    letter: 'H',
-    public: true,
-  },
-  {
-    id: 24,
-    name: 'HaHa Room21',
-    letter: 'H',
-    public: true,
-  },
-  {
-    id: 25,
-    name: 'HaHa Room22',
-    letter: 'H',
-    public: true,
-  },
-  {
-    id: 26,
-    name: 'HaHa Room23',
-    letter: 'H',
-    public: true,
-  },
-  {
-    id: 27,
-    name: 'HaHa Room24',
-    letter: 'H',
-    public: true,
-  },
-  {
-    id: 28,
-    name: 'HaHa Room25',
-    letter: 'H',
-    public: true,
-  },
-];
+// let channels = [];
 
 const users = [
   {
@@ -507,12 +454,22 @@ const users = [
 let status = 'online';
 
 export default {
-  computed: {},
+  computed: {
+    ...mapGetters('channels', {
+      channels: 'joinedChannels',
+      lastMessageOf: 'lastMessageOf',
+    }),
+    activeChannel() {
+      return this.$store.state.channels.active;
+    },
+  },
   data() {
     return {
-      channels,
       displayName: 'Slack',
       status,
+      // leftDrawerOpen: false,
+      message: '',
+      loading: false,
     };
   },
   setup() {
@@ -540,17 +497,25 @@ export default {
     },
     leaveChannel(index) {
       this.channels.splice(index, 1);
-      console.log(channels);
-      console.log(index);
     },
     changePage(to, channel_name) {
       this.displayName = channel_name;
-      console.log('klikol si');
-      console.log(to);
-      // this.$router.push('/');
-      // sleep(1);
       this.$router.push(to);
     },
+    async send() {
+      this.loading = true;
+      await this.addMessage({
+        channel: this.activeChannel,
+        message: this.message,
+      });
+      this.message = '';
+      this.loading = false;
+    },
+    ...mapMutations('channels', {
+      setActiveChannel: 'SET_ACTIVE',
+    }),
+    ...mapActions('auth', ['logout']),
+    ...mapActions('channels', ['addMessage']),
   },
 };
 </script>
@@ -590,5 +555,10 @@ export default {
 
 .users {
   font-size: 24px;
+}
+
+.q-item__label.q-item__label--caption.text-caption.conversation__summary {
+  max-width: 230px;
+  overflow: hidden;
 }
 </style>

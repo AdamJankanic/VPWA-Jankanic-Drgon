@@ -5,17 +5,24 @@
 </template>
 
 <script lang="ts">
-import ChannelMessagesComponent from 'src/components/ChannelMessagesComponent.vue'
-import { SerializedMessage } from 'src/contracts'
-import { defineComponent } from 'vue'
+import ChannelMessagesComponent from 'src/components/ChannelMessagesComponent.vue';
+import { SerializedMessage } from 'src/contracts';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   components: { ChannelMessagesComponent },
   name: 'ChannelPage',
   computed: {
-    messages (): SerializedMessage[] {
-      return this.$store.getters['channels/currentMessages']
-    }
-  }
-})
+    messages(): SerializedMessage[] {
+      return this.$store.getters['channels/currentMessages'];
+    },
+  },
+});
 </script>
+
+<style>
+.q-message-text {
+  width: fit-content;
+  max-width: 400px;
+}
+</style>

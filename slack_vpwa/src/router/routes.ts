@@ -3,10 +3,15 @@ import { RouteRecordRaw } from 'vue-router';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
+    meta: { requiresAuth: true },
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '/:id', component: () => import('pages/MainScreen.vue') },
+      // { path: '/:id', component: () => import('pages/MainScreen.vue') },
       { path: '/welcome', component: () => import('pages/WelcomeScreen.vue') },
+      {
+        path: '',
+        component: () => import('pages/ChannelPage.vue'),
+      },
     ],
   },
   {
@@ -33,6 +38,7 @@ const routes: RouteRecordRaw[] = [
     path: '/channels',
     // channels requires auth
     meta: { requiresAuth: true },
+    // component: () => import('layouts/MainLayout.vue'),
     component: () => import('layouts/ChatLayout.vue'),
     children: [
       {
