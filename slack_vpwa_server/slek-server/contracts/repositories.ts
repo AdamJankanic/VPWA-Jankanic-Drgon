@@ -34,7 +34,7 @@ declare module '@ioc:Repositories/ChannelRepository' {
     createdAt: string
     updatedAt: string
     id: number
-    users: {
+    clen: {
       id: number
       email: string
       createdAt: string

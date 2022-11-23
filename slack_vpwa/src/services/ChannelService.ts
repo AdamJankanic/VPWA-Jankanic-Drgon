@@ -25,6 +25,12 @@ class ChannelSocketManager extends SocketManager {
   public loadMoreMessages(lastMessageId: number): Promise<SerializedMessage[]> {
     return this.emitAsync('loadMoreMessages', lastMessageId);
   }
+
+  //load all channels for the user
+  public loadAllChannels(userId: number): Promise<string[]> {
+    console.log('trying to load all channels');
+    return this.emitAsync('loadChannels', userId);
+  }
 }
 
 class ChannelService {
@@ -55,6 +61,12 @@ class ChannelService {
 
   public in(name: string): ChannelSocketManager | undefined {
     return this.channels.get(name);
+  }
+
+  public starting(name: string): ChannelSocketManager {
+    const channel = new ChannelSocketManager(`/channels/${name}`);
+    this.channels.set(name, channel);
+    return channel;
   }
 }
 

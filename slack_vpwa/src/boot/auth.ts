@@ -1,6 +1,8 @@
 import { boot } from 'quasar/wrappers';
-import { authManager } from 'src/services';
+import { authManager, authService } from 'src/services';
 import { RouteLocationNormalized, RouteLocationRaw } from 'vue-router';
+
+// --------------------------------------------------------------------------------
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -23,9 +25,39 @@ export default boot(({ router, store }) => {
     router.push(loginRoute(router.currentRoute.value));
   });
 
+  //after each route load channels
+  // let joinedChannels: string[];
+  router.afterEach(async () => {
+    const isAuthenticated = await store.dispatch('auth/check');
+    console.log('hrhnijewsakl,             ' + isAuthenticated);
+    if (isAuthenticated) {
+      // console.log('after each');
+      const user = await authService.me();
+      const array_channels = await store.dispatch(
+        'channels/loadAllChannels',
+        user?.id
+      );
+      // console.log(array_channels[0].name);
+      // console.log('after fetching data');
+      // for (let i = 0; i < array_channels.length; i++) {
+      //   joinedChannels.push(array_channels[i].name);
+      // }
+
+      if (user?.id !== store.state.user?.id) {
+        for (let i = 0; i < array_channels.length; i++) {
+          await store.dispatch('channels/join', array_channels[i].name, {
+            root: true,
+          });
+        }
+      }
+    }
+  });
+
   // add route guard to check auth user
   router.beforeEach(async (to) => {
     console.log('skuska');
+    // store.dispatch('channels/loadAllChannels');
+
     const isAuthenticated = await store.dispatch('auth/check');
 
     // route requires authentication

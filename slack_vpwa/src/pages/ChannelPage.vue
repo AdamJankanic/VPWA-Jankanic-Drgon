@@ -21,16 +21,14 @@ export default defineComponent({
   },
   methods: {
     async loadMore() {
-      console.log(this.$store.getters['channels/currentMessages']);
+      // this.$store.dispatch('channels/loadAllChannels');
+      // console.log(await this.$store.dispatch('channels/loadAllChannels'));
+      // console.log(this.$store.getters['channels/currentMessages']);
 
       await this.$store.dispatch('channels/loadMoreMessages', {
         channel: this.$store.state.channels.active,
         lastMessageId: this.messages[0].id,
       });
-
-      // console.log(this.messages);
-      // console.log(this.messages[this.messages.length - 1].id);
-      // console.log(this.messages);
     },
   },
 });

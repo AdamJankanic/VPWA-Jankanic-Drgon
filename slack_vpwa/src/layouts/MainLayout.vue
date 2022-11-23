@@ -48,7 +48,7 @@
                   {{ channel }}
                 </q-item-label>
                 <q-item-label class="conversation__summary" caption>
-                  {{ lastMessageOf(channel)?.content || '' }}
+                  <!-- {{ lastMessageOf(channel)?.content || '' }} -->
                 </q-item-label>
               </q-item-section>
 
@@ -414,7 +414,8 @@ let status = 'online';
 export default {
   computed: {
     ...mapGetters('channels', {
-      channels: 'joinedChannels',
+      // channels: 'joinedChannels',
+      channels: 'getJoinedChannels',
       lastMessageOf: 'lastMessageOf',
     }),
     activeChannel() {

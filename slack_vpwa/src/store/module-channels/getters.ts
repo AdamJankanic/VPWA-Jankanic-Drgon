@@ -15,6 +15,10 @@ const getters: GetterTree<ChannelsStateInterface, StateInterface> = {
       return messages.length > 0 ? messages[messages.length - 1] : null;
     };
   },
+  //get joined channels
+  getJoinedChannels(context) {
+    return context.channels;
+  },
 };
 
 export default getters;

@@ -49,6 +49,30 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
     }
     commit('LOADING_MORE_MESSAGES', { channel, newMessage });
   },
+
+  //load all channels for the user
+  async loadAllChannels({ commit }, userId: number) {
+    try {
+      // commit('LOADING_START');
+
+      console.log('pred volanim loadAllChannels v actions');
+      // console.log('channel serive ' + (await channelService.in('general')));
+      // console.log('channel serive ' + (await channelService.starting('test')));
+
+      const channels = await channelService
+        .starting('starting_channel')
+        .loadAllChannels(userId);
+      await channelService.leave('starting_channel');
+      if (channels) {
+        // console.log(...channels);
+        commit('LOADING_ALL_CHANNELS', channels);
+      }
+      return channels;
+    } catch (err) {
+      commit('LOADING_ERROR', err);
+      throw err;
+    }
+  },
 };
 
 export default actions;

@@ -26,9 +26,9 @@ export default class MessageController {
   }
 
   public async loadMoreMessages({ params, socket }: WsContextContract, lastMessageId: number) {
-    console.log(params.name + ' ' + lastMessageId)
+    // console.log(params.name + ' ' + lastMessageId)
     const messages = await this.messageRepository.getMore(params.name, lastMessageId)
-    console.log(messages)
+    // console.log(messages)
     // broadcast message to other users in channel
     // socket.broadcast.emit('message', message)
     // return message to sender

@@ -43,6 +43,16 @@ const mutation: MutationTree<ChannelsStateInterface> = {
     console.log(state.messages[channel]);
     state.messages[channel].unshift(...newMessage);
   },
+
+  //add new channel to the existing channels
+  LOADING_ALL_CHANNELS(state, channels) {
+    // state.messages[channel].push(message);
+    console.log('v mutation');
+    for (let i = 0; i < channels.length; i++) {
+      console.log(channels[i].name);
+      state.channels.push(channels[i].name);
+    }
+  },
 };
 
 export default mutation;
