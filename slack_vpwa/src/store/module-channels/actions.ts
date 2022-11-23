@@ -37,20 +37,11 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
     { commit },
     { channel, lastMessageId }: { channel: string; lastMessageId: number }
   ) {
-    // console.log('load more messages ' + channel);
-    commit('LOADING_START');
-
     const newMessage = await channelService
       .in(channel)
       ?.loadMoreMessages(lastMessageId);
-    // console.log('bububu after loading' + channel);
-    commit('LOADING_SUCCESS', { channel, newMessage });
     console.log(newMessage);
-    // update the state
-
-    // commit('LOADING_MORE_MESSAGES', { channel, newMessage });
-
-    // commit('NEW_MESSAGE', { channel, message: newMessage });
+    commit('LOADING_MORE_MESSAGES', { channel, newMessage });
   },
 };
 

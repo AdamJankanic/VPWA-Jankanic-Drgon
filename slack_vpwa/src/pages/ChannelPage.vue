@@ -22,7 +22,7 @@ export default defineComponent({
     async loadMore() {
       console.log(this.$store.getters['channels/currentMessages']);
 
-      let nieco = await this.$store.dispatch('channels/loadMoreMessages', {
+      await this.$store.dispatch('channels/loadMoreMessages', {
         channel: this.$store.state.channels.active,
         lastMessageId: this.messages[this.messages.length - 1].id,
       });

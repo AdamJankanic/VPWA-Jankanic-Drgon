@@ -31,7 +31,7 @@ const mutation: MutationTree<ChannelsStateInterface> = {
   ) {
     state.messages[channel].push(message);
   },
-  //Load more messages
+  // append new messages to the existing messages
   LOADING_MORE_MESSAGES(
     state,
     {
@@ -39,8 +39,9 @@ const mutation: MutationTree<ChannelsStateInterface> = {
       newMessage,
     }: { channel: string; newMessage: SerializedMessage[] }
   ) {
-    state.loading = false;
-    state.messages[channel] = newMessage;
+    console.log(...newMessage);
+    console.log(state.messages[channel]);
+    state.messages[channel].push(...newMessage);
   },
 };
 
