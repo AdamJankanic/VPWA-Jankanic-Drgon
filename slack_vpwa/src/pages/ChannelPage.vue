@@ -1,7 +1,7 @@
 <template>
   <q-page class="row items-center justify-evenly">
-    <channel-messages-component :messages="messages" />
     <button @click="loadMore">Nieoc</button>
+    <channel-messages-component :messages="messages" />
   </q-page>
 </template>
 
@@ -15,6 +15,7 @@ export default defineComponent({
   name: 'ChannelPage',
   computed: {
     messages(): SerializedMessage[] {
+      // console.log(this.$store.getters['channels/currentMessages']);
       return this.$store.getters['channels/currentMessages'];
     },
   },
@@ -24,7 +25,7 @@ export default defineComponent({
 
       await this.$store.dispatch('channels/loadMoreMessages', {
         channel: this.$store.state.channels.active,
-        lastMessageId: this.messages[this.messages.length - 1].id,
+        lastMessageId: this.messages[0].id,
       });
 
       // console.log(this.messages);

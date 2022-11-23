@@ -41,7 +41,7 @@ const mutation: MutationTree<ChannelsStateInterface> = {
   ) {
     console.log(...newMessage);
     console.log(state.messages[channel]);
-    state.messages[channel].push(...newMessage);
+    state.messages[channel].unshift(...newMessage);
   },
 };
 

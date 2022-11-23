@@ -11,6 +11,7 @@ export default class MessageRepository implements MessageRepositoryContract {
       .preload('messages', (messagesQuery) =>
         messagesQuery.preload('author').orderBy('id', 'desc').limit(20)
       )
+      .orderBy('id', 'asc')
       .firstOrFail()
 
     return channel.messages.map((message) => message.serialize() as SerializedMessage)

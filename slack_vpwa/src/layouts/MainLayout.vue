@@ -106,7 +106,7 @@
                   {{ channel }}
                 </q-item-label>
                 <q-item-label class="conversation__summary" caption>
-                  <!-- {{ lastMessageOf(channel)?.content || '' }} -->
+                  {{ lastMessageOf(channel)?.content || '' }}
                 </q-item-label>
               </q-item-section>
 
@@ -270,7 +270,7 @@
       <q-page-container> <router-view></router-view> </q-page-container>
     </div>
 
-    <!-- <q-footer>
+    <q-footer>
       <q-toolbar
         class="bg-grey-3 text-black row fixed-bottom"
         :style="{
@@ -301,7 +301,7 @@
         />
         <q-btn :disable="loading" @click="send" round flat icon="send" />
       </q-toolbar>
-    </q-footer> -->
+    </q-footer>
   </q-layout>
 </template>
 

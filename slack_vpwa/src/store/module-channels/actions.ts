@@ -9,6 +9,8 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
     try {
       commit('LOADING_START');
       const messages = await channelService.join(channel).loadMessages();
+      //reverse the order of the messages
+      messages.reverse();
       commit('LOADING_SUCCESS', { channel, messages });
     } catch (err) {
       commit('LOADING_ERROR', err);
@@ -40,7 +42,11 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
     const newMessage = await channelService
       .in(channel)
       ?.loadMoreMessages(lastMessageId);
-    console.log(newMessage);
+
+    //reverse the order of the messages
+    if (newMessage) {
+      newMessage.reverse();
+    }
     commit('LOADING_MORE_MESSAGES', { channel, newMessage });
   },
 };
