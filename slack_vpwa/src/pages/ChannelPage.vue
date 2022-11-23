@@ -19,22 +19,16 @@ export default defineComponent({
     },
   },
   methods: {
-    loadMore() {
-      // console.log('load more PAGE');
-      // this.$store.dispatch('channels/loadMoreMessages', {
-      //   channel: this.$store.state.channels.active,
-      //   lastMessageId: this.messages[this.messages.length - 1].id,
-      // });
+    async loadMore() {
+      console.log(this.$store.getters['channels/currentMessages']);
 
-      //console log least id from messages
-
-      let test = this.$store.dispatch('channels/loadMoreMessages', {
+      let nieco = await this.$store.dispatch('channels/loadMoreMessages', {
         channel: this.$store.state.channels.active,
         lastMessageId: this.messages[this.messages.length - 1].id,
       });
 
-      console.log(this.messages[this.messages.length - 1].id);
-      console.log(...test);
+      // console.log(this.messages);
+      // console.log(this.messages[this.messages.length - 1].id);
       // console.log(this.messages);
     },
   },
