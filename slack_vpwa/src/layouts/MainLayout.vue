@@ -33,64 +33,6 @@
         <q-btn flat @click="createGroup = true" round dense icon="add">
           Add channel</q-btn
         >
-        <!-- 
-        <q-list bordered style="overflow: auto; height: calc(100% - 115px)">
-          <q-item style="background-color: grey">
-            <q-item-section avatar>
-              <q-avatar color="primary" text-color="white"> S </q-avatar>
-            </q-item-section>
-
-            <q-item-section>
-              <q-item-label>Slack</q-item-label>
-            </q-item-section>
-
-            <q-item-section>
-              <q-icon
-                name="done"
-                color="green"
-                size="md"
-                @click="print('Accept')"
-              />
-            </q-item-section>
-
-            <q-item-section>
-              <q-icon
-                name="close"
-                color="red"
-                size="md"
-                @click="print('Decline')"
-              />
-            </q-item-section>
-          </q-item>
-
-          <q-item
-            v-for="(channel, index) in channels"
-            v-bind:key="channel.id"
-            class="q-my-sm"
-            clickable
-            v-ripple
-            @click="changePage(channel.id.toString(), channel.name)"
-          >
-            <q-item-section avatar>
-              <q-avatar color="primary" text-color="white">
-                {{ channel.letter }}
-              </q-avatar>
-            </q-item-section>
-
-            <q-item-section>
-              <q-item-label>{{ channel.name }}</q-item-label>
-            </q-item-section>
-
-            <q-item-section>
-              <q-icon v-if="channel.public" name="people" />
-              <q-icon v-else name="lock" />
-            </q-item-section>
-
-            <q-item-section>
-              <q-icon @click="leaveChannel(index)" name="delete" />
-            </q-item-section>
-          </q-item>
-        </q-list> -->
 
         <q-scroll-area style="height: calc(100% - 100px)">
           <q-list>

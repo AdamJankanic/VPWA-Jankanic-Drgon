@@ -25,3 +25,27 @@ declare module '@ioc:Repositories/MessageRepository' {
   const MessageRepository: MessageRepositoryContract
   export default MessageRepository
 }
+
+//declare our ChannelRepository types for Repositories/ChannelRepository
+// container binding. See providers/AppProvider.ts for how we are binding the implementation
+declare module '@ioc:Repositories/ChannelRepository' {
+  export interface SerializedChannel {
+    name: string
+    createdAt: string
+    updatedAt: string
+    id: number
+    users: {
+      id: number
+      email: string
+      createdAt: string
+      updatedAt: string
+    }
+  }
+
+  export interface ChannelRepositoryContract {
+    getAll(params: number): Promise<SerializedChannel[]>
+    create(name: string): Promise<SerializedChannel>
+  }
+  const ChannelRepository: ChannelRepositoryContract
+  export default ChannelRepository
+}
