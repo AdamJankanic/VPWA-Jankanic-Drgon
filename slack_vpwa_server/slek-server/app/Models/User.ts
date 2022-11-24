@@ -8,6 +8,9 @@ import {
   HasMany,
   manyToMany,
   ManyToMany,
+  HasOne,
+  belongsTo,
+  BelongsTo,
 } from '@ioc:Adonis/Lucid/Orm'
 import Channel from 'App/Models/Channel'
 import Message from 'App/Models/Message'
@@ -24,6 +27,9 @@ export default class User extends BaseModel {
 
   @column()
   public rememberMeToken?: string
+
+  @column()
+  public nickname: string
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
@@ -43,6 +49,10 @@ export default class User extends BaseModel {
     pivotTimestamps: true,
   })
   public channels: ManyToMany<typeof Channel>
+
+  //belongsTo channel creator
+  @belongsTo(() => Channel, { foreignKey: 'id' })
+  public creatotId: BelongsTo<typeof Channel>
 
   @beforeSave()
   public static async hashPassword(user: User) {

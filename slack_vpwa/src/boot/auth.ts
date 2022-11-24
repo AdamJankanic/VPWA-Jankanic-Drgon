@@ -33,6 +33,9 @@ export default boot(({ router, store }) => {
     if (isAuthenticated) {
       // console.log('after each');
       const user = await authService.me();
+      //comit user to store
+      store.commit('auth/SET_USER', user);
+
       const array_channels = await store.dispatch(
         'channels/loadAllChannels',
         user?.id

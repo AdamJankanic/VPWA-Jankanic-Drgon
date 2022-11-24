@@ -53,23 +53,35 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
   //load all channels for the user
   async loadAllChannels({ commit }, userId: number) {
     try {
-      // commit('LOADING_START');
-
-      console.log('pred volanim loadAllChannels v actions');
-      // console.log('channel serive ' + (await channelService.in('general')));
-      // console.log('channel serive ' + (await channelService.starting('test')));
-
       const channels = await channelService
         .starting('starting_channel')
         .loadAllChannels(userId);
       await channelService.leave('starting_channel');
       if (channels) {
-        // console.log(...channels);
         commit('LOADING_ALL_CHANNELS', channels);
       }
       return channels;
     } catch (err) {
       commit('LOADING_ERROR', err);
+      throw err;
+    }
+  },
+
+  //load all users in active channel
+  async loadAllUsersInChannel(
+    { commit },
+    { channelName, channelID }: { channelName: string; channelID: number }
+  ) {
+    try {
+      console.log('v action pred nacitanim' + channelName + channelID);
+      const users = await channelService
+        .in(channelName)
+        ?.loadAllUsersInChannel(channelID);
+      console.log('Loading users   ' + users);
+      return users;
+      // return users;
+    } catch (err) {
+      // commit('LOADING_ERROR', err);
       throw err;
     }
   },

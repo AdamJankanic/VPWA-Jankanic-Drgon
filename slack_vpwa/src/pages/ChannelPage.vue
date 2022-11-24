@@ -8,6 +8,7 @@
 <script lang="ts">
 import ChannelMessagesComponent from 'src/components/ChannelMessagesComponent.vue';
 import { SerializedMessage } from 'src/contracts';
+
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -21,9 +22,15 @@ export default defineComponent({
   },
   methods: {
     async loadMore() {
-      // this.$store.dispatch('channels/loadAllChannels');
-      // console.log(await this.$store.dispatch('channels/loadAllChannels'));
-      // console.log(this.$store.getters['channels/currentMessages']);
+      //load all users in active channel
+
+      console.log('zaciname');
+      await this.$store.dispatch('channels/loadAllUsersInChannel', {
+        channelName: 'general',
+        channelID: 1,
+      });
+
+      console.log('nacitany users');
 
       await this.$store.dispatch('channels/loadMoreMessages', {
         channel: this.$store.state.channels.active,

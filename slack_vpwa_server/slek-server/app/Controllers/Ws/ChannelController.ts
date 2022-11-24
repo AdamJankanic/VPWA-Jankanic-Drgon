@@ -9,8 +9,15 @@ export default class ChannelController {
 
   public async loadChannels({ params }: WsContextContract, userId: number) {
     // console.log(this.channelRepository)
-    console.log('AAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHOOOOOOOOOOOOOOJJJJJJJJJJJJJJ')
     let result = await this.channelRepository.getAll(userId)
+
+    return result
+  }
+
+  //load users in channel
+  public async loadUsers({ params }: WsContextContract, channelId: number) {
+    console.log('server')
+    let result = await this.channelRepository.getUsers(channelId)
 
     console.log('vonku z query')
     console.log(result)

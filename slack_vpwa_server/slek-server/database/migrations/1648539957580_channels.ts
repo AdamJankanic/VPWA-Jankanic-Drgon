@@ -12,6 +12,8 @@ export default class Channels extends BaseSchema {
        */
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
+      table.boolean('private').defaultTo(false)
+      table.integer('creator_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
     })
   }
 

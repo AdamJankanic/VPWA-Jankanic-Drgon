@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
@@ -24,14 +25,9 @@ export default class RegisterUserValidator {
    *    ```
    */
   public schema = schema.create({
-    email: schema.string({}, [
-      rules.email(),
-      rules.unique({ table: 'users', column: 'email' })
-    ]),
-    password: schema.string({}, [
-      rules.minLength(8),
-      rules.confirmed('passwordConfirmation')
-    ])
+    email: schema.string({}, [rules.email(), rules.unique({ table: 'users', column: 'email' })]),
+    password: schema.string({}, [rules.minLength(8), rules.confirmed('passwordConfirmation')]),
+    nickname: schema.string({}, [rules.unique({ table: 'users', column: 'nickname' })]),
   })
 
   /**

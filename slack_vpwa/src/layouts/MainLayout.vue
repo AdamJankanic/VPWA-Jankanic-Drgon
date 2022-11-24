@@ -70,7 +70,7 @@
               <img :src="`https://cdn.quasar.dev/img/avatar3.jpg`" />
             </q-avatar>
             <div class="nickname">
-              <p class="q-mb-none text-bold">Alice159</p>
+              <p class="q-mb-none text-bold">{{ nickname.nickname }}</p>
             </div>
           </div>
           <div
@@ -250,6 +250,7 @@
 <script>
 import { ref } from 'vue';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
+
 // let channels = [
 //   {
 //     id: 1,
@@ -418,6 +419,11 @@ export default {
       channels: 'getJoinedChannels',
       lastMessageOf: 'lastMessageOf',
     }),
+
+    ...mapGetters('auth', {
+      nickname: 'getUser',
+    }),
+
     activeChannel() {
       return this.$store.state.channels.active;
     },

@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, HasMany, hasMany, BelongsTo } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, HasMany, hasMany, BelongsTo, hasOne } from '@ioc:Adonis/Lucid/Orm'
 import Message from 'App/Models/Message'
 import User from 'App/Models/User'
 
@@ -9,6 +9,12 @@ export default class Channel extends BaseModel {
 
   @column()
   public name: string
+
+  @column()
+  public private: boolean
+
+  @column()
+  public creatorId: number
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
@@ -20,5 +26,6 @@ export default class Channel extends BaseModel {
     foreignKey: 'channelId',
   })
   public messages: HasMany<typeof Message>
+  // public creator: HasOne<typeof User>
   public clen: BelongsTo<typeof User>
 }
