@@ -29,7 +29,6 @@ export default boot(({ router, store }) => {
   // let joinedChannels: string[];
   router.afterEach(async () => {
     const isAuthenticated = await store.dispatch('auth/check');
-    console.log('hrhnijewsakl,             ' + isAuthenticated);
     if (isAuthenticated) {
       // console.log('after each');
       const user = await authService.me();

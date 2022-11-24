@@ -19,6 +19,11 @@ const getters: GetterTree<ChannelsStateInterface, StateInterface> = {
   getJoinedChannels(context) {
     return context.channels;
   },
+
+  getJoinedUsers(context){
+    return context.users;
+  },
+
 };
 
 export default getters;

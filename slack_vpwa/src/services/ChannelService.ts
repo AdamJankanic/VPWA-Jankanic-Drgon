@@ -33,10 +33,15 @@ class ChannelSocketManager extends SocketManager {
   }
 
   //load all user in active channel
-  public loadAllUsersInChannel(channelID: number): Promise<string[]> {
-    console.log('channel service' + channelID);
-    return this.emitAsync('loadUsers', channelID);
+  public loadAllUsersInChannel(channelName: string): Promise<string[]> {
+    console.log('channel service' + channelName);
+    return this.emitAsync('loadUsers', channelName);
   }
+  
+  public addChannel(owner: number, channelName: string, privatePublic: string){
+    return this.emitAsync('addChannel', owner, channelName, privatePublic);    
+  }
+
 }
 
 class ChannelService {

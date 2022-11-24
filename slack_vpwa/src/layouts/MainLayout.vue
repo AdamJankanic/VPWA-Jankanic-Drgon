@@ -14,7 +14,7 @@
             />
             <q-btn
               flat
-              @click="drawer = !drawer"
+              @click="rightDrawerClick()"
               round
               dense
               icon="menu"
@@ -41,7 +41,7 @@
               :key="index"
               clickable
               v-ripple
-              @click="setActiveChannel(channel)"
+              @click="setActiveChannel(channel), drawer=false"
             >
               <q-item-section>
                 <q-item-label lines="1">
@@ -102,7 +102,7 @@
           </q-card-section>
 
           <q-card-section class="q-pt-none">
-            <q-input outlined v-model="channelName" label="Channel name" />
+            <q-input outlined v-model="newChannelName" label="Channel name" />
 
             <div>
               <q-toggle
@@ -117,7 +117,10 @@
           </q-card-section>
 
           <q-card-actions align="right" class="bg-white text-teal">
-            <q-btn flat label="OK" v-close-popup />
+            <q-btn 
+            flat label="OK" 
+            v-close-popup
+            @click="createChannel(newChannelName, privatePublic)" />
           </q-card-actions>
         </q-card>
       </q-dialog>
@@ -172,7 +175,6 @@
 
       <q-drawer
         v-model="drawer"
-        show-if-above
         :width="300"
         :breakpoint="1045"
         side="right"
@@ -185,24 +187,14 @@
         <q-scroll-area class="fit" style="height: 85vh !important">
           <q-list>
             <q-item
-              v-for="contact in users"
-              :key="contact.id"
+              v-for="(contact, index) in users"
+              :key="index"
               class="q-mb-sm"
               clickable
               v-ripple
             >
-              <q-item-section avatar>
-                <q-avatar>
-                  <img :src="`https://cdn.quasar.dev/img/${contact.avatar}`" />
-                </q-avatar>
-              </q-item-section>
-
               <q-item-section>
-                <q-item-label>{{ contact.name }}</q-item-label>
-              </q-item-section>
-
-              <q-item-section side>
-                <q-icon name="chat_bubble" :color="contact.active" />
+                <q-item-label>{{ contact}}</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
@@ -323,101 +315,101 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 
 // let channels = [];
 
-const users = [
-  {
-    id: 5,
-    name: 'Brunhilde Panswick',
-    email: 'bpanswick4@csmonitor.com',
-    avatar: 'avatar2.jpg',
-    active: 'green',
-  },
-  {
-    id: 6,
-    name: 'Winfield Stapforth',
-    email: 'wstapforth5@pcworld.com',
-    avatar: 'avatar6.jpg',
-    active: 'grey',
-  },
-  {
-    id: 5,
-    name: 'Brunhilde Panswick',
-    email: 'bpanswick4@csmonitor.com',
-    avatar: 'avatar2.jpg',
-    active: 'green',
-  },
-  {
-    id: 6,
-    name: 'Winfield Stapforth',
-    email: 'wstapforth5@pcworld.com',
-    avatar: 'avatar6.jpg',
-    active: 'grey',
-  },
-  {
-    id: 5,
-    name: 'Brunhilde Panswick',
-    email: 'bpanswick4@csmonitor.com',
-    avatar: 'avatar2.jpg',
-    active: 'green',
-  },
-  {
-    id: 6,
-    name: 'Winfield Stapforth',
-    email: 'wstapforth5@pcworld.com',
-    avatar: 'avatar6.jpg',
-    active: 'grey',
-  },
-  {
-    id: 5,
-    name: 'Brunhilde Panswick',
-    email: 'bpanswick4@csmonitor.com',
-    avatar: 'avatar2.jpg',
-    active: 'green',
-  },
-  {
-    id: 6,
-    name: 'Winfield Stapforth',
-    email: 'wstapforth5@pcworld.com',
-    avatar: 'avatar6.jpg',
-    active: 'grey',
-  },
-  {
-    id: 5,
-    name: 'Brunhilde Panswick',
-    email: 'bpanswick4@csmonitor.com',
-    avatar: 'avatar2.jpg',
-    active: 'green',
-  },
-  {
-    id: 6,
-    name: 'Winfield Stapforth',
-    email: 'wstapforth5@pcworld.com',
-    avatar: 'avatar6.jpg',
-    active: 'grey',
-  },
-  {
-    id: 5,
-    name: 'Brunhilde Panswick',
-    email: 'bpanswick4@csmonitor.com',
-    avatar: 'avatar2.jpg',
-    active: 'green',
-  },
-  {
-    id: 6,
-    name: 'Winfield Stapforth',
-    email: 'wstapforth5@pcworld.com',
-    avatar: 'avatar6.jpg',
-    active: 'grey',
-  },
-];
+// const users = [
+//   {
+//     id: 5,
+//     name: 'Brunhilde Panswick',
+//     email: 'bpanswick4@csmonitor.com',
+//     avatar: 'avatar2.jpg',
+//     active: 'green',
+//   },
+//   {
+//     id: 6,
+//     name: 'Winfield Stapforth',
+//     email: 'wstapforth5@pcworld.com',
+//     avatar: 'avatar6.jpg',
+//     active: 'grey',
+//   },
+//   {
+//     id: 5,
+//     name: 'Brunhilde Panswick',
+//     email: 'bpanswick4@csmonitor.com',
+//     avatar: 'avatar2.jpg',
+//     active: 'green',
+//   },
+//   {
+//     id: 6,
+//     name: 'Winfield Stapforth',
+//     email: 'wstapforth5@pcworld.com',
+//     avatar: 'avatar6.jpg',
+//     active: 'grey',
+//   },
+//   {
+//     id: 5,
+//     name: 'Brunhilde Panswick',
+//     email: 'bpanswick4@csmonitor.com',
+//     avatar: 'avatar2.jpg',
+//     active: 'green',
+//   },
+//   {
+//     id: 6,
+//     name: 'Winfield Stapforth',
+//     email: 'wstapforth5@pcworld.com',
+//     avatar: 'avatar6.jpg',
+//     active: 'grey',
+//   },
+//   {
+//     id: 5,
+//     name: 'Brunhilde Panswick',
+//     email: 'bpanswick4@csmonitor.com',
+//     avatar: 'avatar2.jpg',
+//     active: 'green',
+//   },
+//   {
+//     id: 6,
+//     name: 'Winfield Stapforth',
+//     email: 'wstapforth5@pcworld.com',
+//     avatar: 'avatar6.jpg',
+//     active: 'grey',
+//   },
+//   {
+//     id: 5,
+//     name: 'Brunhilde Panswick',
+//     email: 'bpanswick4@csmonitor.com',
+//     avatar: 'avatar2.jpg',
+//     active: 'green',
+//   },
+//   {
+//     id: 6,
+//     name: 'Winfield Stapforth',
+//     email: 'wstapforth5@pcworld.com',
+//     avatar: 'avatar6.jpg',
+//     active: 'grey',
+//   },
+//   {
+//     id: 5,
+//     name: 'Brunhilde Panswick',
+//     email: 'bpanswick4@csmonitor.com',
+//     avatar: 'avatar2.jpg',
+//     active: 'green',
+//   },
+//   {
+//     id: 6,
+//     name: 'Winfield Stapforth',
+//     email: 'wstapforth5@pcworld.com',
+//     avatar: 'avatar6.jpg',
+//     active: 'grey',
+//   },
+// ];
 
 let status = 'online';
 
 export default {
   computed: {
     ...mapGetters('channels', {
-      // channels: 'joinedChannels',
       channels: 'getJoinedChannels',
       lastMessageOf: 'lastMessageOf',
+      users: 'getJoinedUsers'
     }),
 
     ...mapGetters('auth', {
@@ -433,9 +425,9 @@ export default {
     return {
       displayName: 'Slack',
       status,
-      // leftDrawerOpen: false,
       message: '',
       loading: false,
+      //drawer: false,
     };
   },
   setup() {
@@ -449,7 +441,6 @@ export default {
       privatePublic: ref('Public'),
       DNB: ref('Off'),
       createGroup: ref(false),
-      users,
       onlineColor: 'grey',
     };
   },
@@ -470,18 +461,48 @@ export default {
     },
     async send() {
       this.loading = true;
-      await this.addMessage({
+      if (this.message === '/list'){
+        await this.loadAllUsersInChannel({
+          channelName: this.activeChannel,
+        })
+        this.drawer = true
+      }else{
+        await this.addMessage({
         channel: this.activeChannel,
         message: this.message,
       });
+      }
       this.message = '';
       this.loading = false;
+    },
+    async createChannel(newChannelName, privatePublic){
+      if(newChannelName !== ''){
+        await this.addChannel({
+          owner: this.nickname.id,
+          newChannelName: newChannelName,
+          privatePublic: privatePublic
+        })
+        await this.$store.dispatch('channels/join', newChannelName, {
+            root: true,
+          });
+      }
+    },
+
+    async rightDrawerClick(){
+      this.drawer = !this.drawer
+      if(this.drawer){
+      await this.loadAllUsersInChannel({
+          channelName: this.activeChannel,
+        })
+      }
     },
     ...mapMutations('channels', {
       setActiveChannel: 'SET_ACTIVE',
     }),
     ...mapActions('auth', ['logout']),
     ...mapActions('channels', ['addMessage']),
+    ...mapActions('channels', ['loadAllUsersInChannel']),
+    ...mapActions('channels', ['addChannel']),
   },
 };
 </script>

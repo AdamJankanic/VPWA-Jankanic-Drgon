@@ -1,6 +1,7 @@
 <template>
   <q-page class="row items-center justify-evenly">
-    <button @click="loadMore">Nieoc</button>
+    <button @click="loadMore">Nieco</button>
+    <!-- <h6> {{users}}</h6>> -->
     <channel-messages-component :messages="messages" />
   </q-page>
 </template>
@@ -16,21 +17,21 @@ export default defineComponent({
   name: 'ChannelPage',
   computed: {
     messages(): SerializedMessage[] {
-      // console.log(this.$store.getters['channels/currentMessages']);
       return this.$store.getters['channels/currentMessages'];
     },
+
+    // users(): string[] {
+    //   return this.$store.getters['channels/getJoinedChannels'];
+    // },
   },
   methods: {
     async loadMore() {
       //load all users in active channel
+      //   await this.$store.dispatch('channels/loadAllUsersInChannel', {
+      //   channelName: 'general',
+      //   channelID: 1,
+      // });
 
-      console.log('zaciname');
-      await this.$store.dispatch('channels/loadAllUsersInChannel', {
-        channelName: 'general',
-        channelID: 1,
-      });
-
-      console.log('nacitany users');
 
       await this.$store.dispatch('channels/loadMoreMessages', {
         channel: this.$store.state.channels.active,

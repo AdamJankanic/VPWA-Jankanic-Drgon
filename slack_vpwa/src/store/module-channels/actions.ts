@@ -3,6 +3,7 @@ import { StateInterface } from '../index';
 import { ChannelsStateInterface } from './state';
 import { channelService } from 'src/services';
 import { RawMessage } from 'src/contracts';
+import internal from 'stream';
 
 const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
   async join({ commit }, channel: string) {
@@ -70,14 +71,16 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
   //load all users in active channel
   async loadAllUsersInChannel(
     { commit },
-    { channelName, channelID }: { channelName: string; channelID: number }
+    { channelName}: { channelName: string}
   ) {
     try {
-      console.log('v action pred nacitanim' + channelName + channelID);
+      console.log('v action pred nacitanim' + channelName);
       const users = await channelService
         .in(channelName)
-        ?.loadAllUsersInChannel(channelID);
-      console.log('Loading users   ' + users);
+        ?.loadAllUsersInChannel(channelName);
+      if(users){
+        commit('LOADING_JOINED_USERS', users);
+      }
       return users;
       // return users;
     } catch (err) {
@@ -85,6 +88,24 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
       throw err;
     }
   },
+
+  async addChannel(
+    {commit}, 
+    {owner, newChannelName, privatePublic}: {owner: number, newChannelName: string, privatePublic: string}
+  ) {
+    try{
+      console.log('v addCHannel ' + owner + newChannelName + privatePublic);
+      const newChannel = await channelService.starting('starting_channel').addChannel(owner, newChannelName, privatePublic);
+      await channelService.leave('starting_channel');
+      if(newChannel){
+        commit('ADD_NEW_CHANNEL', newChannel) 
+        return newChannel
+      }
+    } catch(err) {
+      throw err;
+    }
+},
+
 };
 
 export default actions;

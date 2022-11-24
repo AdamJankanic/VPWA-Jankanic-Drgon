@@ -53,6 +53,26 @@ const mutation: MutationTree<ChannelsStateInterface> = {
       state.channels.push(channels[i].name);
     }
   },
+
+  LOADING_JOINED_USERS(state, users){
+    //console.log(users);
+    state.users = []
+    for(let i = 0; i < users.length; i++){
+      state.users.push(users[i].nickname)
+    }
+  },
+
+  ADD_NEW_CHANNEL(state, channel){
+    state.channels.push(channel[0].name);
+    console.log('v mutaciach');
+    console.log(channel);
+    
+    console.log(channel[0].name);
+    console.log(state.channels);
+    
+    
+  },
+
 };
 
 export default mutation;
