@@ -94,7 +94,6 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
     {owner, newChannelName, privatePublic}: {owner: number, newChannelName: string, privatePublic: string}
   ) {
     try{
-      console.log('v addCHannel ' + owner + newChannelName + privatePublic);
       const newChannel = await channelService.starting('starting_channel').addChannel(owner, newChannelName, privatePublic);
       await channelService.leave('starting_channel');
       if(newChannel){
@@ -104,7 +103,21 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
     } catch(err) {
       throw err;
     }
-},
+  },  
+
+  async leaveChannel(
+    {commit},
+    {channelName, user}: {channelName: string, user: number}
+  ) {
+    try{
+    const channels = await channelService.in(channelName)?.leaveChannel(channelName, user);
+    if(channels){
+      commit('LOADING_ALL_CHANNELS', channels)
+    }
+    } catch(err) {
+      throw err;
+    }
+  }
 
 };
 

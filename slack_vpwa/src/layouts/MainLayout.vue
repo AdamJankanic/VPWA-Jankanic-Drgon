@@ -23,7 +23,7 @@
           </q-toolbar>
 
           <q-toolbar-title class="absolute-center vertical-top">
-            {{ displayName }}
+            {{ activeChannel }}
             <!-- {{ width_input }} -->
           </q-toolbar-title>
         </q-toolbar>
@@ -427,7 +427,6 @@ export default {
       status,
       message: '',
       loading: false,
-      //drawer: false,
     };
   },
   setup() {
@@ -452,12 +451,8 @@ export default {
     logout() {
       this.$router.push('/auth');
     },
-    leaveChannel(index) {
-      this.channels.splice(index, 1);
-    },
-    changePage(to, channel_name) {
-      this.displayName = channel_name;
-      this.$router.push(to);
+    changePage() {
+      this.$router.push('/');
     },
     async send() {
       this.loading = true;
@@ -466,7 +461,15 @@ export default {
           channelName: this.activeChannel,
         })
         this.drawer = true
-      }else{
+      } else if(this.message === '/cancel'){
+        await this.leaveChannel({
+          channelName: this.activeChannel,
+          user: this.nickname.id,
+        })
+        this.setActiveChannel('Slack')
+        this.drawer = false
+      }
+      else{
         await this.addMessage({
         channel: this.activeChannel,
         message: this.message,
@@ -503,6 +506,7 @@ export default {
     ...mapActions('channels', ['addMessage']),
     ...mapActions('channels', ['loadAllUsersInChannel']),
     ...mapActions('channels', ['addChannel']),
+    ...mapActions('channels', ['leaveChannel']),
   },
 };
 </script>

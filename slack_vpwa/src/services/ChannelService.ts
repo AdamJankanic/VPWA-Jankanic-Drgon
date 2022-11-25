@@ -42,6 +42,10 @@ class ChannelSocketManager extends SocketManager {
     return this.emitAsync('addChannel', owner, channelName, privatePublic);    
   }
 
+  public leaveChannel(channelName: string, user: number){
+    return this.emitAsync('leaveChannel', channelName, user);
+  }
+
 }
 
 class ChannelService {

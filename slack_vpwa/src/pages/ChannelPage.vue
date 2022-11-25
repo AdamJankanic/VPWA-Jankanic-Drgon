@@ -1,8 +1,8 @@
 <template>
   <q-page class="row items-center justify-evenly">
     <button @click="loadMore">Nieco</button>
-    <!-- <h6> {{users}}</h6>> -->
     <channel-messages-component :messages="messages" />
+    
   </q-page>
 </template>
 

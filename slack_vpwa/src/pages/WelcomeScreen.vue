@@ -1,38 +1,6 @@
 <template>
   <q-page class="row items-center justify-evenly">
     <h1>WELCOME</h1>
-    <q-page-sticky position="bottom" expand>
-      <command-line class="commandLine">
-        <q-input
-          bottom-slots
-          v-model="inputText"
-          label="Message"
-          counter
-          :dense="dense"
-          class="messageInput"
-          @keyup.enter="send"
-        >
-          <template v-slot:before>
-            <q-avatar>
-              <img src="https://cdn.quasar.dev/img/avatar3.jpg" />
-            </q-avatar>
-          </template>
-
-          <template v-slot:append>
-            <q-icon
-              v-if="inputText !== ''"
-              name="close"
-              @click="inputText = ''"
-              class="cursor-pointer"
-            />
-          </template>
-
-          <template v-slot:after>
-            <q-btn @click="send" round dense flat icon="send" />
-          </template>
-        </q-input>
-      </command-line>
-    </q-page-sticky>
   </q-page>
 </template>
 

@@ -47,7 +47,7 @@ const mutation: MutationTree<ChannelsStateInterface> = {
   //add new channel to the existing channels
   LOADING_ALL_CHANNELS(state, channels) {
     // state.messages[channel].push(message);
-    console.log('v mutation');
+    state.channels = []
     for (let i = 0; i < channels.length; i++) {
       console.log(channels[i].name);
       state.channels.push(channels[i].name);

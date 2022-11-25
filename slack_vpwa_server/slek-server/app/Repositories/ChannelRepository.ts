@@ -52,4 +52,26 @@ export default class ChannelRepository implements ChannelRepositoryContract {
     await Database.rawQuery('INSERT into channel_users(user_id, channel_id, created_at, updated_at) values(?, ?, ?, ?)', [owner, channel[0].id, time, time])
     return channel as SerializedChannel
   }
+
+  public async leaveChannel(channelName: string, user: number): Promise<any> {
+    const creator_id = await Database.rawQuery('select creator_id from channels where name = ?', [channelName])
+    const channel_id = await Database.rawQuery('select id from channels where name = ?', [channelName])
+
+    if(user == creator_id[0].creator_id){
+      await Database.rawQuery('delete from channels where name = ?', [channelName])
+      await Database.rawQuery('delete from messages where channel_id = ?', [channel_id[0].id])
+    }else{
+      console.log(channel_id[0].id);
+      
+      await Database.rawQuery('delete from channel_users where channel_id = ?', [channel_id[0].id])
+    }
+
+    const channels = await this.getAll(user)
+
+    console.log(channels);
+     
+    
+
+    return channels
+  }
 }

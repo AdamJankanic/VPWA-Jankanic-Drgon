@@ -8,6 +8,7 @@
         :text="[message.content]"
         :stamp="message.createdAt"
         :sent="isMine(message)"
+        :bg-color="mention(message)"
         style="margin: 0 auto"
       />
     </div>
@@ -37,7 +38,7 @@ export default defineComponent({
   },
   computed: {
     currentUser() {
-      return this.$store.state.auth.user?.id;
+      return this.$store.state.auth.user;
     },
   },
   methods: {
@@ -46,8 +47,19 @@ export default defineComponent({
       area && area.setScrollPercentage('vertical', 1.1);
     },
     isMine(message: SerializedMessage): boolean {
-      return message.author.id === this.currentUser;
+      return message.author.id === this.currentUser?.id;
     },
+
+    mention(message: SerializedMessage): string {
+      if(message.content.includes('@' + this.currentUser?.nickname)){
+        return 'red'
+      }
+      else if(this.isMine(message)){
+        return 'light-green'
+      }
+      return 'grey'
+    },
+
   },
 });
 </script>

@@ -22,4 +22,8 @@ export default class ChannelController {
   public async addChannel({params}: WsContextContract, owner: number, channelName: string, privatePublic: string){
     return await this.channelRepository.create(owner, channelName, privatePublic)    
   }
+
+  public async leaveChannel({params}: WsContextContract, channelName: string, user: number){
+    return await this.channelRepository.leaveChannel(channelName, user)
+  }
 }
