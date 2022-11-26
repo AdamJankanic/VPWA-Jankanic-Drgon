@@ -28,6 +28,13 @@ export default boot(({ router, store }) => {
   //after each route load channels
   // let joinedChannels: string[];
   router.afterEach(async () => {
+    // NOTIFICATION TEST
+    console.log(Notification.permission);
+    const notification = new Notification('Ahoj priatel', {
+      body: 'Ahoj priatelu, co robis?',
+    });
+    // --------------------------------------------------------------------------------------
+
     const isAuthenticated = await store.dispatch('auth/check');
     if (isAuthenticated) {
       // console.log('after each');
@@ -58,6 +65,7 @@ export default boot(({ router, store }) => {
   // add route guard to check auth user
   router.beforeEach(async (to) => {
     console.log('skuska');
+    // -------------------------------------------------------------------------------------
     // store.dispatch('channels/loadAllChannels');
 
     const isAuthenticated = await store.dispatch('auth/check');

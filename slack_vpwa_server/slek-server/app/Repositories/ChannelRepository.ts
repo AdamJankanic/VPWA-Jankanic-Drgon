@@ -33,44 +33,57 @@ export default class ChannelRepository implements ChannelRepositoryContract {
     return [...users]
   }
 
-  public async create(owner: number, channelName: string, privatePublic: string): Promise<SerializedChannel> {
-    let privatny:boolean;
-    if(privatePublic === 'private'){
+  public async create(
+    owner: number,
+    channelName: string,
+    privatePublic: string
+  ): Promise<SerializedChannel> {
+    let privatny: boolean
+    if (privatePublic === 'private') {
       privatny = true
-    }else{
+    } else {
       privatny = false
     }
 
     let time = new Date().toISOString().slice(0, 19).replace('T', ' ')
 
     await Database.rawQuery(
-      'INSERT into channels(name, created_at, updated_at, private, creator_id) values(?, ?, ?, ?, ?)', [channelName, time, time, privatny, owner]
-    );
+      'INSERT into channels(name, created_at, updated_at, private, creator_id) values(?, ?, ?, ?, ?)',
+      [channelName, time, time, privatny, owner]
+    )
 
-    let channel = await Database.rawQuery('SELECT * from channels where name = ?', [channelName])   
+    let channel = await Database.rawQuery('SELECT * from channels where name = ?', [channelName])
 
-    await Database.rawQuery('INSERT into channel_users(user_id, channel_id, created_at, updated_at) values(?, ?, ?, ?)', [owner, channel[0].id, time, time])
+    await Database.rawQuery(
+      'INSERT into channel_users(user_id, channel_id, created_at, updated_at) values(?, ?, ?, ?)',
+      [owner, channel[0].id, time, time]
+    )
     return channel as SerializedChannel
   }
 
   public async leaveChannel(channelName: string, user: number): Promise<any> {
-    const creator_id = await Database.rawQuery('select creator_id from channels where name = ?', [channelName])
-    const channel_id = await Database.rawQuery('select id from channels where name = ?', [channelName])
+    const creatorId = await Database.rawQuery('select creator_id from channels where name = ?', [
+      channelName,
+    ])
+    const channelId = await Database.rawQuery('select id from channels where name = ?', [
+      channelName,
+    ])
 
-    if(user == creator_id[0].creator_id){
+    if (user === creatorId[0].creator_id) {
       await Database.rawQuery('delete from channels where name = ?', [channelName])
-      await Database.rawQuery('delete from messages where channel_id = ?', [channel_id[0].id])
-    }else{
-      console.log(channel_id[0].id);
-      
-      await Database.rawQuery('delete from channel_users where channel_id = ?', [channel_id[0].id])
+      await Database.rawQuery('delete from messages where channel_id = ?', [channelId[0].id])
+    } else {
+      console.log(channelId[0].id)
+
+      await Database.rawQuery('delete from channel_users where channel_id = ? and user_id = ?', [
+        channelId[0].id,
+        user,
+      ])
     }
 
     const channels = await this.getAll(user)
 
-    console.log(channels);
-     
-    
+    console.log(channels)
 
     return channels
   }

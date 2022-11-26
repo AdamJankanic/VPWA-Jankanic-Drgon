@@ -2,7 +2,6 @@
   <q-page class="row items-center justify-evenly">
     <button @click="loadMore">Nieco</button>
     <channel-messages-component :messages="messages" />
-    
   </q-page>
 </template>
 
@@ -32,6 +31,7 @@ export default defineComponent({
       //   channelID: 1,
       // });
 
+      // console.log('load more kokot');
 
       await this.$store.dispatch('channels/loadMoreMessages', {
         channel: this.$store.state.channels.active,

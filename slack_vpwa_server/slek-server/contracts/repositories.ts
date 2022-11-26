@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 // here we are declaring our MessageRepository types for Repositories/MessageRepository
 // container binding. See providers/AppProvider.ts for how we are binding the implementation
 declare module '@ioc:Repositories/MessageRepository' {

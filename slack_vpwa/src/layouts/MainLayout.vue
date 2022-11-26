@@ -23,7 +23,7 @@
           </q-toolbar>
 
           <q-toolbar-title class="absolute-center vertical-top">
-            {{ activeChannel }}
+            {{ nameActiveChannel }}
             <!-- {{ width_input }} -->
           </q-toolbar-title>
         </q-toolbar>
@@ -41,7 +41,7 @@
               :key="index"
               clickable
               v-ripple
-              @click="setActiveChannel(channel), drawer=false"
+              @click="setActiveChannel(channel), (drawer = false)"
             >
               <q-item-section>
                 <q-item-label lines="1">
@@ -117,10 +117,12 @@
           </q-card-section>
 
           <q-card-actions align="right" class="bg-white text-teal">
-            <q-btn 
-            flat label="OK" 
-            v-close-popup
-            @click="createChannel(newChannelName, privatePublic)" />
+            <q-btn
+              flat
+              label="OK"
+              v-close-popup
+              @click="createChannel(newChannelName, privatePublic)"
+            />
           </q-card-actions>
         </q-card>
       </q-dialog>
@@ -194,7 +196,7 @@
               v-ripple
             >
               <q-item-section>
-                <q-item-label>{{ contact}}</q-item-label>
+                <q-item-label>{{ contact }}</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
@@ -242,166 +244,8 @@
 <script>
 import { ref } from 'vue';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-
-// let channels = [
-//   {
-//     id: 1,
-//     name: 'VPWA',
-//     letter: 'V',
-//     public: true,
-//   },
-//   {
-//     id: 2,
-//     name: 'General',
-//     letter: 'G',
-//     public: false,
-//   },
-//   {
-//     id: 3,
-//     name: 'HaHa Room',
-//     letter: 'H',
-//     public: false,
-//   },
-//   {
-//     id: 4,
-//     name: 'HaHa Room1',
-//     letter: 'H',
-//     public: true,
-//   },
-//   {
-//     id: 5,
-//     name: 'HaHa Room2',
-//     letter: 'H',
-//     public: true,
-//   },
-//   {
-//     id: 6,
-//     name: 'HaHa Room3',
-//     letter: 'H',
-//     public: true,
-//   },
-//   {
-//     id: 7,
-//     name: 'HaHa Room4',
-//     letter: 'H',
-//     public: true,
-//   },
-//   {
-//     id: 8,
-//     name: 'HaHa Room5',
-//     letter: 'H',
-//     public: true,
-//   },
-//   {
-//     id: 9,
-//     name: 'HaHa Room6',
-//     letter: 'H',
-//     public: true,
-//   },
-//   {
-//     id: 10,
-//     name: 'HaHa Room7',
-//     letter: 'H',
-//     public: true,
-//   },
-//   {
-//     id: 11,
-//     name: 'HaHa Room8',
-//     letter: 'H',
-//     public: true,
-//   },
-//
-// ];
-
-// let channels = [];
-
-// const users = [
-//   {
-//     id: 5,
-//     name: 'Brunhilde Panswick',
-//     email: 'bpanswick4@csmonitor.com',
-//     avatar: 'avatar2.jpg',
-//     active: 'green',
-//   },
-//   {
-//     id: 6,
-//     name: 'Winfield Stapforth',
-//     email: 'wstapforth5@pcworld.com',
-//     avatar: 'avatar6.jpg',
-//     active: 'grey',
-//   },
-//   {
-//     id: 5,
-//     name: 'Brunhilde Panswick',
-//     email: 'bpanswick4@csmonitor.com',
-//     avatar: 'avatar2.jpg',
-//     active: 'green',
-//   },
-//   {
-//     id: 6,
-//     name: 'Winfield Stapforth',
-//     email: 'wstapforth5@pcworld.com',
-//     avatar: 'avatar6.jpg',
-//     active: 'grey',
-//   },
-//   {
-//     id: 5,
-//     name: 'Brunhilde Panswick',
-//     email: 'bpanswick4@csmonitor.com',
-//     avatar: 'avatar2.jpg',
-//     active: 'green',
-//   },
-//   {
-//     id: 6,
-//     name: 'Winfield Stapforth',
-//     email: 'wstapforth5@pcworld.com',
-//     avatar: 'avatar6.jpg',
-//     active: 'grey',
-//   },
-//   {
-//     id: 5,
-//     name: 'Brunhilde Panswick',
-//     email: 'bpanswick4@csmonitor.com',
-//     avatar: 'avatar2.jpg',
-//     active: 'green',
-//   },
-//   {
-//     id: 6,
-//     name: 'Winfield Stapforth',
-//     email: 'wstapforth5@pcworld.com',
-//     avatar: 'avatar6.jpg',
-//     active: 'grey',
-//   },
-//   {
-//     id: 5,
-//     name: 'Brunhilde Panswick',
-//     email: 'bpanswick4@csmonitor.com',
-//     avatar: 'avatar2.jpg',
-//     active: 'green',
-//   },
-//   {
-//     id: 6,
-//     name: 'Winfield Stapforth',
-//     email: 'wstapforth5@pcworld.com',
-//     avatar: 'avatar6.jpg',
-//     active: 'grey',
-//   },
-//   {
-//     id: 5,
-//     name: 'Brunhilde Panswick',
-//     email: 'bpanswick4@csmonitor.com',
-//     avatar: 'avatar2.jpg',
-//     active: 'green',
-//   },
-//   {
-//     id: 6,
-//     name: 'Winfield Stapforth',
-//     email: 'wstapforth5@pcworld.com',
-//     avatar: 'avatar6.jpg',
-//     active: 'grey',
-//   },
-// ];
-
+import { useQuasar } from 'quasar';
+import { watch } from 'vue';
 let status = 'online';
 
 export default {
@@ -409,7 +253,7 @@ export default {
     ...mapGetters('channels', {
       channels: 'getJoinedChannels',
       lastMessageOf: 'lastMessageOf',
-      users: 'getJoinedUsers'
+      users: 'getJoinedUsers',
     }),
 
     ...mapGetters('auth', {
@@ -418,6 +262,11 @@ export default {
 
     activeChannel() {
       return this.$store.state.channels.active;
+    },
+
+    nameActiveChannel() {
+      let nameOfChannel = this.activeChannel || 'Slack';
+      return nameOfChannel;
     },
   },
 
@@ -430,8 +279,13 @@ export default {
     };
   },
   setup() {
+    const $q = useQuasar();
+    watch(() => {
+      console.log($q.appVisible);
+    });
+
     return {
-      channelName: ref(''),
+      channelName: ref('Slack'),
       drawer: ref(false),
       small: ref(false),
       drawerOn: ref(true),
@@ -456,47 +310,50 @@ export default {
     },
     async send() {
       this.loading = true;
-      if (this.message === '/list'){
+      if (this.message === '/list') {
         await this.loadAllUsersInChannel({
           channelName: this.activeChannel,
-        })
-        this.drawer = true
-      } else if(this.message === '/cancel'){
+        });
+        this.drawer = true;
+      } else if (this.message === '/cancel') {
         await this.leaveChannel({
           channelName: this.activeChannel,
           user: this.nickname.id,
-        })
-        this.setActiveChannel('Slack')
-        this.drawer = false
+        });
+        this.setActiveChannel('Slack');
+        this.drawer = false;
       }
-      else{
+      //adding message to database
+      else if (this.nameActiveChannel !== 'Slack') {
         await this.addMessage({
-        channel: this.activeChannel,
-        message: this.message,
-      });
+          channel: this.activeChannel,
+          message: this.message,
+        });
+      } else {
+        alert('Please select a channel to send messages');
       }
       this.message = '';
       this.loading = false;
     },
-    async createChannel(newChannelName, privatePublic){
-      if(newChannelName !== ''){
+    async createChannel(newChannelName, privatePublic) {
+      if (newChannelName !== '') {
         await this.addChannel({
           owner: this.nickname.id,
           newChannelName: newChannelName,
-          privatePublic: privatePublic
-        })
+          privatePublic: privatePublic,
+        });
         await this.$store.dispatch('channels/join', newChannelName, {
-            root: true,
-          });
+          root: true,
+        });
       }
     },
 
-    async rightDrawerClick(){
-      this.drawer = !this.drawer
-      if(this.drawer){
-      await this.loadAllUsersInChannel({
+    async rightDrawerClick() {
+      this.drawer = !this.drawer;
+      if (this.drawer) {
+        await this.loadAllUsersInChannel({
           channelName: this.activeChannel,
-        })
+        });
       }
     },
     ...mapMutations('channels', {

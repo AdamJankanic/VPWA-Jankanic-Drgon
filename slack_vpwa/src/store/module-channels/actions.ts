@@ -3,7 +3,6 @@ import { StateInterface } from '../index';
 import { ChannelsStateInterface } from './state';
 import { channelService } from 'src/services';
 import { RawMessage } from 'src/contracts';
-import internal from 'stream';
 
 const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
   async join({ commit }, channel: string) {
@@ -71,14 +70,14 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
   //load all users in active channel
   async loadAllUsersInChannel(
     { commit },
-    { channelName}: { channelName: string}
+    { channelName }: { channelName: string }
   ) {
     try {
       console.log('v action pred nacitanim' + channelName);
       const users = await channelService
         .in(channelName)
         ?.loadAllUsersInChannel(channelName);
-      if(users){
+      if (users) {
         commit('LOADING_JOINED_USERS', users);
       }
       return users;
@@ -90,35 +89,48 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
   },
 
   async addChannel(
-    {commit}, 
-    {owner, newChannelName, privatePublic}: {owner: number, newChannelName: string, privatePublic: string}
+    { commit },
+    {
+      owner,
+      newChannelName,
+      privatePublic,
+    }: { owner: number; newChannelName: string; privatePublic: string }
   ) {
-    try{
-      const newChannel = await channelService.starting('starting_channel').addChannel(owner, newChannelName, privatePublic);
+    try {
+      const newChannel = await channelService
+        .starting('starting_channel')
+
+        .addChannel(owner, newChannelName, privatePublic);
       await channelService.leave('starting_channel');
-      if(newChannel){
-        commit('ADD_NEW_CHANNEL', newChannel) 
-        return newChannel
+      if (newChannel) {
+        commit('ADD_NEW_CHANNEL', newChannel);
+        return newChannel;
       }
-    } catch(err) {
+    } catch (err) {
       throw err;
     }
-  },  
+  },
 
   async leaveChannel(
-    {commit},
-    {channelName, user}: {channelName: string, user: number}
+    { commit },
+    { channelName, user }: { channelName: string; user: number }
   ) {
-    try{
-    const channels = await channelService.in(channelName)?.leaveChannel(channelName, user);
-    if(channels){
-      commit('LOADING_ALL_CHANNELS', channels)
-    }
-    } catch(err) {
+    try {
+      const channels = await channelService
+        .in(channelName)
+        ?.leaveChannel(channelName, user);
+
+      channelService.leave(channelName);
+
+      if (channels) {
+        commit('LOADING_ALL_CHANNELS', channels);
+        // delete messeges from the channel
+        commit('CLEAR_CHANNEL', channelName);
+      }
+    } catch (err) {
       throw err;
     }
-  }
-
+  },
 };
 
 export default actions;

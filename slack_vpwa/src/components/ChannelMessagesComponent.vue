@@ -51,15 +51,13 @@ export default defineComponent({
     },
 
     mention(message: SerializedMessage): string {
-      if(message.content.includes('@' + this.currentUser?.nickname)){
-        return 'red'
+      if (message.content.includes('@' + this.currentUser?.nickname)) {
+        return 'red';
+      } else if (this.isMine(message)) {
+        return 'light-green';
       }
-      else if(this.isMine(message)){
-        return 'light-green'
-      }
-      return 'grey'
+      return 'grey';
     },
-
   },
 });
 </script>
