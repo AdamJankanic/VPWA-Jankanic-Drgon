@@ -1,6 +1,7 @@
 <template>
   <q-page class="row items-center justify-evenly">
-    <button @click="loadMore">Nieco</button>
+    <!-- <button @click="loadMore">Nieco</button> -->
+    <p>{{ notification }}</p>
     <channel-messages-component :messages="messages" />
   </q-page>
 </template>
@@ -14,25 +15,30 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   components: { ChannelMessagesComponent },
   name: 'ChannelPage',
+
+  watch: {
+    notification() {
+      console.log(Notification.permission);
+      console.log('WATCH NOTIFICATION MANAGER');
+      const notification = new Notification('Ahoj priatel', {
+        body: 'Ahoj priatelu, co robis?',
+      });
+    },
+  },
+
   computed: {
     messages(): SerializedMessage[] {
       return this.$store.getters['channels/currentMessages'];
     },
 
-    // users(): string[] {
-    //   return this.$store.getters['channels/getJoinedChannels'];
-    // },
+    notification() {
+      console.log('notifikacia' + this.$store.state.channels.notification);
+      console.log(this.$store.state.channels.notification);
+      return this.$store.state.channels.notification;
+    },
   },
   methods: {
     async loadMore() {
-      //load all users in active channel
-      //   await this.$store.dispatch('channels/loadAllUsersInChannel', {
-      //   channelName: 'general',
-      //   channelID: 1,
-      // });
-
-      // console.log('load more kokot');
-
       await this.$store.dispatch('channels/loadMoreMessages', {
         channel: this.$store.state.channels.active,
         lastMessageId: this.messages[0].id,

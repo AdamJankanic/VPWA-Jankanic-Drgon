@@ -7,6 +7,7 @@ export interface ChannelsStateInterface {
   active: string | null;
   channels: string[];
   users: string[];
+  notification: { userName: string; message: string; channel: string };
 }
 
 function state(): ChannelsStateInterface {
@@ -17,6 +18,7 @@ function state(): ChannelsStateInterface {
     active: null,
     channels: [],
     users: [],
+    notification: { userName: '', message: '', channel: '' },
   };
 }
 

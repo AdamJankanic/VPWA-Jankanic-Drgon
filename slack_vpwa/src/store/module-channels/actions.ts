@@ -99,9 +99,10 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
     try {
       const newChannel = await channelService
         .starting('starting_channel')
-
         .addChannel(owner, newChannelName, privatePublic);
+
       await channelService.leave('starting_channel');
+
       if (newChannel) {
         commit('ADD_NEW_CHANNEL', newChannel);
         return newChannel;

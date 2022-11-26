@@ -7,9 +7,13 @@ import { BootParams, SocketManager } from './SocketManager';
 class ChannelSocketManager extends SocketManager {
   public subscribe({ store }: BootParams): void {
     const channel = this.namespace.split('/').pop() as string;
-
     this.socket.on('message', (message: SerializedMessage) => {
       store.commit('channels/NEW_MESSAGE', { channel, message });
+      store.commit('channels/SET_NOTIFICATION', {
+        userName: message.author.nickname,
+        message: message.content.substring(0, 20),
+        channel: channel,
+      });
     });
   }
 
@@ -37,15 +41,14 @@ class ChannelSocketManager extends SocketManager {
     console.log('channel service' + channelName);
     return this.emitAsync('loadUsers', channelName);
   }
-  
-  public addChannel(owner: number, channelName: string, privatePublic: string){
-    return this.emitAsync('addChannel', owner, channelName, privatePublic);    
+
+  public addChannel(owner: number, channelName: string, privatePublic: string) {
+    return this.emitAsync('addChannel', owner, channelName, privatePublic);
   }
 
-  public leaveChannel(channelName: string, user: number){
+  public leaveChannel(channelName: string, user: number) {
     return this.emitAsync('leaveChannel', channelName, user);
   }
-
 }
 
 class ChannelService {

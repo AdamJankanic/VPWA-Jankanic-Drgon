@@ -44,35 +44,54 @@ const mutation: MutationTree<ChannelsStateInterface> = {
     state.messages[channel].unshift(...newMessage);
   },
 
+  // set notification message
+  SET_NOTIFICATION(
+    state,
+    {
+      userName,
+      message,
+      channel,
+    }: { userName: string; message: string; channel: string }
+  ) {
+    state.notification.userName = userName;
+    state.notification.message = message;
+    state.notification.channel = channel;
+    console.log(
+      'MUTACIA    ' +
+        state.notification.userName +
+        ' ' +
+        state.notification.message +
+        ' ' +
+        state.notification.channel
+    );
+  },
+
   //add new channel to the existing channels
   LOADING_ALL_CHANNELS(state, channels) {
     // state.messages[channel].push(message);
-    state.channels = []
+    state.channels = [];
     for (let i = 0; i < channels.length; i++) {
       console.log(channels[i].name);
       state.channels.push(channels[i].name);
     }
   },
 
-  LOADING_JOINED_USERS(state, users){
+  LOADING_JOINED_USERS(state, users) {
     //console.log(users);
-    state.users = []
-    for(let i = 0; i < users.length; i++){
-      state.users.push(users[i].nickname)
+    state.users = [];
+    for (let i = 0; i < users.length; i++) {
+      state.users.push(users[i].nickname);
     }
   },
 
-  ADD_NEW_CHANNEL(state, channel){
+  ADD_NEW_CHANNEL(state, channel) {
     state.channels.push(channel[0].name);
     console.log('v mutaciach');
     console.log(channel);
-    
+
     console.log(channel[0].name);
     console.log(state.channels);
-    
-    
   },
-
 };
 
 export default mutation;
