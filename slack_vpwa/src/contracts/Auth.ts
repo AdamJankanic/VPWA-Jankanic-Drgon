@@ -9,6 +9,7 @@ export interface RegisterData {
   email: string;
   password: string;
   passwordConfirmation: string;
+  nickname: string;
 }
 
 export interface LoginCredentials {
@@ -23,4 +24,7 @@ export interface User {
   createdAt: string;
   updatedAt: string;
   nickname: string;
+  isOnline: boolean;
+  isDnd: boolean;
+  onlyMentions: boolean;
 }

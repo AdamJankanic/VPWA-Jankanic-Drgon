@@ -18,6 +18,7 @@ const mutation: MutationTree<AuthStateInterface> = {
   //set user
   SET_USER(state, user: User | null) {
     state.user = user;
+    console.log('set user  ', state.user);
   },
 };
 

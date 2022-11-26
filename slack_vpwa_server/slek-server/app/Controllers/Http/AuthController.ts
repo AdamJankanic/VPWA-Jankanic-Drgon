@@ -8,6 +8,7 @@ export default class AuthController {
   async register({ request }: HttpContextContract) {
     const data = await request.validate(RegisterUserValidator)
     const user = await User.create(data)
+
     // join user to general channel
     const general = await Channel.findByOrFail('name', 'general')
     await user.related('channels').attach([general.id])
@@ -26,8 +27,10 @@ export default class AuthController {
     return auth.use('api').logout()
   }
 
-  async me({ auth }: HttpContextContract) {
+  async me({ auth }: string[]) {
+    console.log(auth.user)
     await auth.user!.load('channels')
-    return auth.user
+
+    return [auth.user, auth.user.$extras]
   }
 }

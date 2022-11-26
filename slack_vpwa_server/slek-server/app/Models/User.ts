@@ -16,6 +16,8 @@ import Channel from 'App/Models/Channel'
 import Message from 'App/Models/Message'
 
 export default class User extends BaseModel {
+  public serializeExtras = true
+
   @column({ isPrimary: true })
   public id: number
 
@@ -30,6 +32,15 @@ export default class User extends BaseModel {
 
   @column()
   public nickname: string
+
+  @column()
+  public isOnline: boolean
+
+  @column()
+  public isDnd: boolean
+
+  @column()
+  public onlyMentions: boolean
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

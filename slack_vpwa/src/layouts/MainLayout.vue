@@ -33,9 +33,9 @@
         <q-btn flat @click="createGroup = true" round dense icon="add">
           Add channel</q-btn
         >
-
         <q-scroll-area style="height: calc(100% - 100px)">
           <q-list>
+            {{ nickname[1].isDnd }}
             <q-item
               v-for="(channel, index) in channels"
               :key="index"
@@ -70,7 +70,7 @@
               <img :src="`https://cdn.quasar.dev/img/avatar3.jpg`" />
             </q-avatar>
             <div class="nickname">
-              <p class="q-mb-none text-bold">{{ nickname.nickname }}</p>
+              <p class="q-mb-none text-bold">{{ nickname[0].nickname }}</p>
             </div>
           </div>
           <div
@@ -280,10 +280,10 @@ export default {
   },
   setup() {
     const $q = useQuasar();
+
     watch(() => {
       console.log($q.appVisible);
     });
-
     return {
       channelName: ref('Slack'),
       drawer: ref(false),

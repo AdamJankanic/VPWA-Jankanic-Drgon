@@ -30,7 +30,7 @@ export default boot(({ router, store }) => {
   router.afterEach(async () => {
     const isAuthenticated = await store.dispatch('auth/check');
     if (isAuthenticated) {
-      // console.log('after each');
+      console.log('after each');
       const user = await authService.me();
       //comit user to store
       store.commit('auth/SET_USER', user);
@@ -39,6 +39,10 @@ export default boot(({ router, store }) => {
         'channels/loadAllChannels',
         user?.id
       );
+
+      if (user !== null) {
+        console.log(user['id']);
+      }
       // console.log(array_channels[0].name);
       // console.log('after fetching data');
       // for (let i = 0; i < array_channels.length; i++) {

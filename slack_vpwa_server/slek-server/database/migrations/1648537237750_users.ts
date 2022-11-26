@@ -10,7 +10,9 @@ export default class UsersSchema extends BaseSchema {
       table.string('password', 180).notNullable()
       table.string('remember_me_token').nullable()
       table.string('nickname', 255).notNullable()
-
+      table.boolean('isOnline').defaultTo(true)
+      table.boolean('isDnd').defaultTo(false)
+      table.boolean('onlyMentions').defaultTo(false)
       /**
        * Uses timestampz for PostgreSQL and DATETIME2 for MSSQL
        */

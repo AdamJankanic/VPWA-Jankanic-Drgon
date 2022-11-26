@@ -11,7 +11,7 @@ class ChannelSocketManager extends SocketManager {
       store.commit('channels/NEW_MESSAGE', { channel, message });
       store.commit('channels/SET_NOTIFICATION', {
         userName: message.author.nickname,
-        message: message.content.substring(0, 20),
+        message: message.content,
         channel: channel,
       });
     });
