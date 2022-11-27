@@ -30,3 +30,7 @@ Route.group(() => {
   Route.post('logout', 'AuthController.logout').middleware('auth')
   Route.get('me', 'AuthController.me').middleware('auth')
 }).prefix('auth')
+
+Route.patch('modifySettings', 'UserController.modifySettings')
+Route.patch('loadUser', 'UserController.loadUser')
+

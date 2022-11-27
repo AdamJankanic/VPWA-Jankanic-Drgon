@@ -39,8 +39,6 @@ const mutation: MutationTree<ChannelsStateInterface> = {
       newMessage,
     }: { channel: string; newMessage: SerializedMessage[] }
   ) {
-    console.log(...newMessage);
-    console.log(state.messages[channel]);
     state.messages[channel].unshift(...newMessage);
   },
 
@@ -56,14 +54,6 @@ const mutation: MutationTree<ChannelsStateInterface> = {
     state.notification.userName = userName;
     state.notification.message = message;
     state.notification.channel = channel;
-    console.log(
-      'MUTACIA    ' +
-        state.notification.userName +
-        ' ' +
-        state.notification.message +
-        ' ' +
-        state.notification.channel
-    );
   },
 
   //add new channel to the existing channels
@@ -71,7 +61,6 @@ const mutation: MutationTree<ChannelsStateInterface> = {
     // state.messages[channel].push(message);
     state.channels = [];
     for (let i = 0; i < channels.length; i++) {
-      console.log(channels[i].name);
       state.channels.push(channels[i].name);
     }
   },
@@ -86,11 +75,6 @@ const mutation: MutationTree<ChannelsStateInterface> = {
 
   ADD_NEW_CHANNEL(state, channel) {
     state.channels.push(channel[0].name);
-    console.log('v mutaciach');
-    console.log(channel);
-
-    console.log(channel[0].name);
-    console.log(state.channels);
   },
 };
 

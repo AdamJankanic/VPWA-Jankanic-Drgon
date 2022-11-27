@@ -110,7 +110,7 @@ export default class ChannelRepository implements ChannelRepositoryContract {
     const user = await Database.rawQuery('update users set isOnline = ?, isDnd = ?, onlyMentions = ? where users.id = ?', [online, DND, onlyMentions, owner])
     console.log(await Database.rawQuery('select * from users where users.id = ?', [owner]))
 
-    return 'dsadsad'
+    return await Database.rawQuery('select * from users where users.id = ?', [owner])
 
   }
 }

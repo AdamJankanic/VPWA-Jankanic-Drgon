@@ -140,6 +140,9 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
     try {
       const user = await channelService.starting('starting_channel').modifySettings(owner, onlineOffline, DNB, notifications);
       await channelService.leave('starting_channel');
+
+      console.log(user);
+      
             
     } catch(err) {
       throw err;

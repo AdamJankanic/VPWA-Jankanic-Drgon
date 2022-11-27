@@ -9,14 +9,10 @@ const actions: ActionTree<AuthStateInterface, StateInterface> = {
     try {
       commit('AUTH_START');
       const user = await authService.me();
-      // console.log('user halo ' + user?.id);
-      // join user to general channel - hardcoded for now
-
-      // if (user?.id !== state.user?.id) {
-      //   await dispatch('channels/join', 'general', { root: true });
-      // }
       commit('AUTH_SUCCESS', user);
-      return user !== null;
+      console.log('actions user', user);
+      
+      return user;
     } catch (err) {
       commit('AUTH_ERROR', err);
       throw err;
@@ -59,6 +55,7 @@ const actions: ActionTree<AuthStateInterface, StateInterface> = {
       throw err;
     }
   },
+  
 };
 
 export default actions;

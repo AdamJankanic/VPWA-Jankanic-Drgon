@@ -31,9 +31,9 @@ export default defineComponent({
         console.log('WATCH NOTIFICATION MANAGER');
         if (!this.$q.appVisible) {
           if (
-            (this.user.onlyMentions &&
-              this.notification.message.includes('@' + this.user.username)) ||
-            !this.user.onlyMentions
+            (this.account[0].onlyMentions &&
+              this.notification.message.includes('@' + this.account[0].nickname)) ||
+            !this.account[0].onlyMentions
           ) {
             const notification_message = new Notification(
               'Channel:   ' +
@@ -53,8 +53,8 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapGetters('auth', {
-      user: 'getUser',
+    ...mapGetters('users', {
+      account: 'getAccount'
     }),
 
     messages(): SerializedMessage[] {
@@ -63,7 +63,6 @@ export default defineComponent({
 
     notification() {
       console.log('notifikacia' + this.$store.state.channels.notification);
-      console.log(this.$store.state.channels.notification);
       return this.$store.state.channels.notification;
     },
   },

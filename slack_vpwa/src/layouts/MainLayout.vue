@@ -83,7 +83,7 @@
                 :class="status"
               />
               <q-icon
-                @click="small = true"
+                @click="small = true, setOptions()"
                 size="md"
                 name="settings"
                 color="grey"
@@ -259,8 +259,16 @@ export default {
       nickname: 'getUser',
     }),
 
+    ...mapGetters('users', {
+      account: 'getAccount'
+    }),
+
     activeChannel() {
       return this.$store.state.channels.active;
+    },
+
+    dndOption(){
+      return this.$store.state.users.user.isDnd;
     },
 
     nameActiveChannel() {
@@ -288,16 +296,37 @@ export default {
       drawer: ref(false),
       small: ref(false),
       drawerOn: ref(true),
-      onlineOffline: ref('Online'),
-      notifications: ref('On'),
+      onlineOffline: ref(false),
+      notifications: ref(false),
       privatePublic: ref('Public'),
-      DNB: ref('Off'),
+      DNB: ref(true),
       createGroup: ref(false),
       onlineColor: 'grey',
     };
   },
 
   methods: {
+    setOptions(){
+      if(this.account[0].isDnd){
+        this.DNB = 'On'
+      }else{
+        this.DNB = 'Off'
+      }
+
+      if(this.account[0].isOnline){
+        this.onlineOffline = 'Online'
+      }else{
+        this.onlineOffline = 'Offline'
+      }
+
+      if(this.account[0].onlyMentions){
+        this.notifications = 'On'
+      }else{
+        this.notifications = 'Off'
+      }
+
+    },
+
     print(text) {
       console.log(text);
     },
@@ -355,7 +384,6 @@ export default {
         DNB: DNB,
         notifications: notifications,
       })
-
     },
 
     async rightDrawerClick() {
@@ -374,7 +402,7 @@ export default {
     ...mapActions('channels', ['loadAllUsersInChannel']),
     ...mapActions('channels', ['addChannel']),
     ...mapActions('channels', ['leaveChannel']),
-    ...mapActions('channels', ['modifySettings']),
+    ...mapActions('users', ['modifySettings']),
   },
 };
 </script>
