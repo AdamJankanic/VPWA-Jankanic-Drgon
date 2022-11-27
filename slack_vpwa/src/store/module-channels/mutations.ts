@@ -65,6 +65,14 @@ const mutation: MutationTree<ChannelsStateInterface> = {
     }
   },
 
+  //remove channel from existing channels by name
+  REMOVE_CHANNEL(state, channel) {
+    const index = state.channels.indexOf(channel);
+    if (index > -1) {
+      state.channels.splice(index, 1);
+    }
+  },
+
   LOADING_JOINED_USERS(state, users) {
     //console.log(users);
     state.users = [];

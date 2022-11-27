@@ -1,8 +1,10 @@
 <template>
   <q-page class="row items-center justify-evenly">
-    <button @click="loadMore">Nieco</button>
+    <!-- <button @click="loadMore">Nieco</button> -->
+
+    <!-- <button @click="scrollPosition">Nieco</button> -->
     <!-- <p>{{ notification }}</p> -->
-    <channel-messages-component :messages="messages" />
+    <channel-messages-component @click="loadMore" :messages="messages" />
   </q-page>
 </template>
 
@@ -28,13 +30,19 @@ export default defineComponent({
     notification: {
       handler() {
         // console.log(Notification.permission);
-        console.log('WATCH NOTIFICATION MANAGER');
+        console.log('WATCH NOTIFICATION MANAGER', this.account[0].onlyMentions);
         if (!this.$q.appVisible) {
           if (
             (this.account[0].onlyMentions &&
-              this.notification.message.includes('@' + this.account[0].nickname)) ||
+              this.notification.message.includes(
+                '@' + this.account[0].nickname
+              )) ||
             !this.account[0].onlyMentions
           ) {
+            console.log(
+              'INSIIIIIIIIIIIIIDEEEEEEEEEEE',
+              this.account[0].onlyMentions
+            );
             const notification_message = new Notification(
               'Channel:   ' +
                 this.notification.channel +
@@ -54,7 +62,7 @@ export default defineComponent({
 
   computed: {
     ...mapGetters('users', {
-      account: 'getAccount'
+      account: 'getAccount',
     }),
 
     messages(): SerializedMessage[] {

@@ -1,5 +1,6 @@
 import { RawMessage, SerializedMessage } from 'src/contracts';
 import { BootParams, SocketManager } from './SocketManager';
+import { channelService } from 'src/services';
 
 // creating instance of this class automatically connects to given socket.io namespace
 // subscribe is called with boot params, so you can use it to dispatch actions for socket events
@@ -14,6 +15,20 @@ class ChannelSocketManager extends SocketManager {
         message: message.content,
         channel: channel,
       });
+    });
+
+    this.socket.on('leaveChannelResponse', (channelName: string) => {
+      console.log('TEST LOG EMIT ZO SERVERA VSETKYM', channelName);
+
+      store.commit('channels/CLEAR_CHANNEL', channelName);
+      store.commit('channels/REMOVE_CHANNEL', channelName);
+
+      if (channelName == store.state.channels.active) {
+        store.commit('channels/SET_ACTIVE', 'Slack');
+      }
+
+      channelService.leave(channelName);
+      console.log('EMIT ZBEHOL, FANFARY');
     });
   }
 
@@ -50,8 +65,19 @@ class ChannelSocketManager extends SocketManager {
     return this.emitAsync('leaveChannel', channelName, user);
   }
 
-  public modifySettings(owner: number, onlineOffline: string, DNB: string, notifications: string) {    
-    return this.emitAsync('modifySettings', owner, onlineOffline, DNB, notifications)
+  public modifySettings(
+    owner: number,
+    onlineOffline: string,
+    DNB: string,
+    notifications: string
+  ) {
+    return this.emitAsync(
+      'modifySettings',
+      owner,
+      onlineOffline,
+      DNB,
+      notifications
+    );
   }
 }
 

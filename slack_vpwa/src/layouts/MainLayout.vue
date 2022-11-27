@@ -83,7 +83,7 @@
                 :class="status"
               />
               <q-icon
-                @click="small = true, setOptions()"
+                @click="(small = true), setOptions()"
                 size="md"
                 name="settings"
                 color="grey"
@@ -156,7 +156,7 @@
               <!-- <q-icon size="md" name="chat_bubble" color="green"  /> -->
             </div>
             <div class="flexbox">
-              <h6>Notifications</h6>
+              <h6>Notifications on mention</h6>
               <q-toggle
                 false-value="Off"
                 :label="`${notifications}`"
@@ -169,7 +169,12 @@
           </q-card-section>
 
           <q-card-actions align="right" class="bg-white text-teal">
-            <q-btn flat label="OK" @click="changeSettings(onlineOffline, DNB, notifications)" v-close-popup />
+            <q-btn
+              flat
+              label="OK"
+              @click="changeSettings(onlineOffline, DNB, notifications)"
+              v-close-popup
+            />
           </q-card-actions>
         </q-card>
       </q-dialog>
@@ -202,7 +207,9 @@
         </q-scroll-area>
       </q-drawer>
 
-      <q-page-container> <router-view></router-view> </q-page-container>
+      <q-page-container v-if="nameActiveChannel !== 'Slack'">
+        <router-view></router-view>
+      </q-page-container>
     </div>
 
     <q-footer>
@@ -210,17 +217,6 @@
         class="bg-grey-3 text-black row fixed-bottom"
         :style="{
           left: [drawerOn ? 300 : 0] + 'px',
-          // width:
-          //   [
-          //     [drawerOn && drawer]
-          //       ? $q.screen.width - 2 * 300
-          //       : [drawerOn && !drawer]
-          //       ? $q.screen.width - 300
-          //       : [!drawerOn && drawer]
-          //       ? $q.screen.width - 300
-          //       : $q.screen.width,
-          //     ,
-          //   ] + 'px',
         }"
       >
         <q-input
@@ -248,6 +244,15 @@ import { watch } from 'vue';
 let status = 'online';
 
 export default {
+  watch: {
+    channels: {
+      handler() {
+        console.log('pocet kanalov');
+      },
+      deep: true,
+    },
+  },
+
   computed: {
     ...mapGetters('channels', {
       channels: 'getJoinedChannels',
@@ -260,14 +265,14 @@ export default {
     }),
 
     ...mapGetters('users', {
-      account: 'getAccount'
+      account: 'getAccount',
     }),
 
     activeChannel() {
       return this.$store.state.channels.active;
     },
 
-    dndOption(){
+    dndOption() {
       return this.$store.state.users.user.isDnd;
     },
 
@@ -306,25 +311,24 @@ export default {
   },
 
   methods: {
-    setOptions(){
-      if(this.account[0].isDnd){
-        this.DNB = 'On'
-      }else{
-        this.DNB = 'Off'
+    setOptions() {
+      if (this.account[0].isDnd) {
+        this.DNB = 'On';
+      } else {
+        this.DNB = 'Off';
       }
 
-      if(this.account[0].isOnline){
-        this.onlineOffline = 'Online'
-      }else{
-        this.onlineOffline = 'Offline'
+      if (this.account[0].isOnline) {
+        this.onlineOffline = 'Online';
+      } else {
+        this.onlineOffline = 'Offline';
       }
 
-      if(this.account[0].onlyMentions){
-        this.notifications = 'On'
-      }else{
-        this.notifications = 'Off'
+      if (this.account[0].onlyMentions) {
+        this.notifications = 'On';
+      } else {
+        this.notifications = 'Off';
       }
-
     },
 
     print(text) {
@@ -376,14 +380,14 @@ export default {
       }
     },
 
-    async changeSettings(onlineOffline, DNB, notifications){+
-      console.log(onlineOffline, DNB, notifications);
+    async changeSettings(onlineOffline, DNB, notifications) {
+      +console.log(onlineOffline, DNB, notifications);
       await this.modifySettings({
         owner: this.nickname.id,
-        onlineOffline: onlineOffline, 
+        onlineOffline: onlineOffline,
         DNB: DNB,
         notifications: notifications,
-      })
+      });
     },
 
     async rightDrawerClick() {

@@ -1,6 +1,9 @@
 <template>
   <q-scroll-area ref="area" style="width: 100%; height: calc(100vh - 150px)">
     <div style="width: 95%; margin: 0 auto">
+      <button @click="$emit('loadMore')" class="top vertical-middle">
+        Load more messages
+      </button>
       <q-chat-message
         v-for="message in messages"
         :key="message.id"
@@ -44,7 +47,7 @@ export default defineComponent({
   methods: {
     scrollMessages() {
       const area = this.$refs.area as QScrollArea;
-      area && area.setScrollPercentage('vertical', 1.1);
+      area && area.setScrollPercentage('vertical', 100);
     },
     isMine(message: SerializedMessage): boolean {
       return message.author.id === this.currentUser?.id;

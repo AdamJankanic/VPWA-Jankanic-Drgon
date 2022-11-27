@@ -2,6 +2,7 @@
 import type { WsContextContract } from '@ioc:Ruby184/Socket.IO/WsContext'
 import type { ChannelRepositoryContract } from '@ioc:Repositories/ChannelRepository'
 import { inject } from '@adonisjs/core/build/standalone'
+import Database from '@ioc:Adonis/Lucid/Database'
 
 @inject(['Repositories/ChannelRepository'])
 export default class ChannelController {
@@ -19,15 +20,39 @@ export default class ChannelController {
     return await this.channelRepository.getUsers(channelName)
   }
 
-  public async addChannel({params}: WsContextContract, owner: number, channelName: string, privatePublic: string){
-    return await this.channelRepository.create(owner, channelName, privatePublic)    
+  public async addChannel(
+    { params }: WsContextContract,
+    owner: number,
+    channelName: string,
+    privatePublic: string
+  ) {
+    return await this.channelRepository.create(owner, channelName, privatePublic)
   }
 
-  public async leaveChannel({params}: WsContextContract, channelName: string, user: number){
-    return await this.channelRepository.leaveChannel(channelName, user)
+  public async leaveChannel(
+    { params, socket }: WsContextContract,
+    channelName: string,
+    user: number
+  ) {
+    const creatorId = await Database.rawQuery('select creator_id from channels where name = ?', [
+      channelName,
+    ])
+    const channels = await this.channelRepository.leaveChannel(channelName, user)
+
+    console.log('leaveChannelController   ', creatorId[0].creator_id)
+    if (creatorId[0].creator_id === user) {
+      socket.broadcast.emit('leaveChannelResponse', channelName)
+    }
+    return channels
   }
 
-  public async modifySettings({params}: WsContextContract, owner: number, onlineOffline: string, DNB: string, notifications: string){
+  public async modifySettings(
+    { params }: WsContextContract,
+    owner: number,
+    onlineOffline: string,
+    DNB: string,
+    notifications: string
+  ) {
     return await this.channelRepository.modifySettings(owner, onlineOffline, DNB, notifications)
   }
 }

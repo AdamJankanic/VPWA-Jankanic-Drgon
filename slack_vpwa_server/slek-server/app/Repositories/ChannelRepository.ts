@@ -72,7 +72,6 @@ export default class ChannelRepository implements ChannelRepositoryContract {
       await Database.rawQuery('delete from channels where name = ?', [channelName])
       await Database.rawQuery('delete from messages where channel_id = ?', [channelId[0].id])
     } else {
-
       await Database.rawQuery('delete from channel_users where channel_id = ? and user_id = ?', [
         channelId[0].id,
         user,
@@ -84,33 +83,39 @@ export default class ChannelRepository implements ChannelRepositoryContract {
     return channels
   }
 
-  public async modifySettings(owner: number, onlineOffline: string, DNB: string, notifications: string): Promise<any> {
-    let online;
-    if(onlineOffline === 'Online'){
+  public async modifySettings(
+    owner: number,
+    onlineOffline: string,
+    DNB: string,
+    notifications: string
+  ): Promise<any> {
+    let online
+    if (onlineOffline === 'Online') {
       online = true
-    }
-    else{
+    } else {
       online = false
     }
 
-    let DND;
-    if(DNB === 'On'){
+    let DND
+    if (DNB === 'On') {
       DND = true
-    }else{
+    } else {
       DND = false
     }
 
-    let onlyMentions;
-    if(notifications === 'On'){
+    let onlyMentions
+    if (notifications === 'On') {
       onlyMentions = true
-    }else {
+    } else {
       onlyMentions = false
     }
 
-    const user = await Database.rawQuery('update users set isOnline = ?, isDnd = ?, onlyMentions = ? where users.id = ?', [online, DND, onlyMentions, owner])
+    const user = await Database.rawQuery(
+      'update users set isOnline = ?, isDnd = ?, onlyMentions = ? where users.id = ?',
+      [online, DND, onlyMentions, owner]
+    )
     console.log(await Database.rawQuery('select * from users where users.id = ?', [owner]))
 
     return await Database.rawQuery('select * from users where users.id = ?', [owner])
-
   }
 }
