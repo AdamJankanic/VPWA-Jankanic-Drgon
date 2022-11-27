@@ -48,6 +48,7 @@ declare module '@ioc:Repositories/ChannelRepository' {
     create(owner: number, channelName: string, privatePublic: string): Promise<SerializedChannel>
     getUsers(channelName: string): Promise<any>
     leaveChannel(channelName: string, user: number): Promise<SerializedChannel[]>
+    modifySettings(owner: number, onlineOffline: string, DNB: string, notifications: string): Promise<any>
   }
   const ChannelRepository: ChannelRepositoryContract
   export default ChannelRepository

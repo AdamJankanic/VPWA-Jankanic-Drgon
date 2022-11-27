@@ -16,7 +16,7 @@ const getters: GetterTree<ChannelsStateInterface, StateInterface> = {
     };
   },
   //get joined channels
-  getJoinedChannels(context) {
+  getJoinedChannels(context) {    
     return context.channels;
   },
 

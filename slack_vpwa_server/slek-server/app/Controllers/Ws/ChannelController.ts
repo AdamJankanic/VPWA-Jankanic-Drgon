@@ -26,4 +26,8 @@ export default class ChannelController {
   public async leaveChannel({params}: WsContextContract, channelName: string, user: number){
     return await this.channelRepository.leaveChannel(channelName, user)
   }
+
+  public async modifySettings({params}: WsContextContract, owner: number, onlineOffline: string, DNB: string, notifications: string){
+    return await this.channelRepository.modifySettings(owner, onlineOffline, DNB, notifications)
+  }
 }

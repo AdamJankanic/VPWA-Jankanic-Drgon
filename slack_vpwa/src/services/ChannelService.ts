@@ -49,6 +49,10 @@ class ChannelSocketManager extends SocketManager {
   public leaveChannel(channelName: string, user: number) {
     return this.emitAsync('leaveChannel', channelName, user);
   }
+
+  public modifySettings(owner: number, onlineOffline: string, DNB: string, notifications: string) {    
+    return this.emitAsync('modifySettings', owner, onlineOffline, DNB, notifications)
+  }
 }
 
 class ChannelService {

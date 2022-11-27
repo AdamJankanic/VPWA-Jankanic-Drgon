@@ -27,10 +27,9 @@ export default class AuthController {
     return auth.use('api').logout()
   }
 
-  async me({ auth }: string[]) {
-    console.log(auth.user)
+  async me({ auth }:  HttpContextContract) {    
     await auth.user!.load('channels')
 
-    return [auth.user, auth.user.$extras]
+    return auth.user
   }
 }

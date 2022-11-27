@@ -13,7 +13,6 @@ export default class MessageController {
   constructor(private messageRepository: MessageRepositoryContract) {}
 
   public async loadMessages({ params }: WsContextContract) {
-    console.log(this.messageRepository)
     return this.messageRepository.getAll(params.name)
   }
 

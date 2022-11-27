@@ -132,6 +132,19 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
       throw err;
     }
   },
+
+  async modifySettings(
+    {commit},
+    {owner, onlineOffline, DNB, notifications}: {owner: number, onlineOffline: string, DNB: string, notifications: string}
+  ) {
+    try {
+      const user = await channelService.starting('starting_channel').modifySettings(owner, onlineOffline, DNB, notifications);
+      await channelService.leave('starting_channel');
+            
+    } catch(err) {
+      throw err;
+    }
+  }
 };
 
 export default actions;

@@ -9,6 +9,7 @@
 */
 
 import Ws from '@ioc:Ruby184/Socket.IO/Ws'
+import ChannelController from 'App/Controllers/Ws/ChannelController'
 
 Ws.namespace('/')
   .connected('ActivityController.onConnected')
@@ -24,3 +25,4 @@ Ws.namespace('channels/:name')
   .on('loadUsers', 'ChannelController.loadUsers')
   .on('addChannel', 'ChannelController.addChannel')
   .on('leaveChannel', 'ChannelController.leaveChannel')
+  .on('modifySettings', 'ChannelController.modifySettings')

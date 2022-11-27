@@ -22,7 +22,6 @@ export default class ChannelRepository implements ChannelRepositoryContract {
 
   //get all users in channel
   public async getUsers(channelName: string): Promise<User[]> {
-    console.log('channel id server ' + channelName)
     const users = await Database.rawQuery(
       'SELECT users.id, users.nickname FROM users \
     JOIN channel_users ON channel_users.user_id = users.id \
@@ -73,7 +72,6 @@ export default class ChannelRepository implements ChannelRepositoryContract {
       await Database.rawQuery('delete from channels where name = ?', [channelName])
       await Database.rawQuery('delete from messages where channel_id = ?', [channelId[0].id])
     } else {
-      console.log(channelId[0].id)
 
       await Database.rawQuery('delete from channel_users where channel_id = ? and user_id = ?', [
         channelId[0].id,
@@ -83,8 +81,36 @@ export default class ChannelRepository implements ChannelRepositoryContract {
 
     const channels = await this.getAll(user)
 
-    console.log(channels)
-
     return channels
+  }
+
+  public async modifySettings(owner: number, onlineOffline: string, DNB: string, notifications: string): Promise<any> {
+    let online;
+    if(onlineOffline === 'Online'){
+      online = true
+    }
+    else{
+      online = false
+    }
+
+    let DND;
+    if(DNB === 'On'){
+      DND = true
+    }else{
+      DND = false
+    }
+
+    let onlyMentions;
+    if(notifications === 'On'){
+      onlyMentions = true
+    }else {
+      onlyMentions = false
+    }
+
+    const user = await Database.rawQuery('update users set isOnline = ?, isDnd = ?, onlyMentions = ? where users.id = ?', [online, DND, onlyMentions, owner])
+    console.log(await Database.rawQuery('select * from users where users.id = ?', [owner]))
+
+    return 'dsadsad'
+
   }
 }

@@ -35,7 +35,6 @@
         >
         <q-scroll-area style="height: calc(100% - 100px)">
           <q-list>
-            {{ nickname[1].isDnd }}
             <q-item
               v-for="(channel, index) in channels"
               :key="index"
@@ -70,7 +69,7 @@
               <img :src="`https://cdn.quasar.dev/img/avatar3.jpg`" />
             </q-avatar>
             <div class="nickname">
-              <p class="q-mb-none text-bold">{{ nickname[0].nickname }}</p>
+              <p class="q-mb-none text-bold">{{ nickname.nickname }}</p>
             </div>
           </div>
           <div
@@ -138,10 +137,10 @@
               <h6>Online/Offline</h6>
               <q-toggle
                 false-value="Offline"
-                :label="`${onnlineOffline}`"
+                :label="`${onlineOffline}`"
                 true-value="Online"
                 color="green"
-                v-model="onnlineOffline"
+                v-model="onlineOffline"
               />
               <!-- <q-icon size="md" name="chat_bubble" color="green"  /> -->
             </div>
@@ -170,7 +169,7 @@
           </q-card-section>
 
           <q-card-actions align="right" class="bg-white text-teal">
-            <q-btn flat label="OK" v-close-popup />
+            <q-btn flat label="OK" @click="changeSettings(onlineOffline, DNB, notifications)" v-close-popup />
           </q-card-actions>
         </q-card>
       </q-dialog>
@@ -289,7 +288,7 @@ export default {
       drawer: ref(false),
       small: ref(false),
       drawerOn: ref(true),
-      onnlineOffline: ref('Online'),
+      onlineOffline: ref('Online'),
       notifications: ref('On'),
       privatePublic: ref('Public'),
       DNB: ref('Off'),
@@ -348,6 +347,17 @@ export default {
       }
     },
 
+    async changeSettings(onlineOffline, DNB, notifications){+
+      console.log(onlineOffline, DNB, notifications);
+      await this.modifySettings({
+        owner: this.nickname.id,
+        onlineOffline: onlineOffline, 
+        DNB: DNB,
+        notifications: notifications,
+      })
+
+    },
+
     async rightDrawerClick() {
       this.drawer = !this.drawer;
       if (this.drawer) {
@@ -364,6 +374,7 @@ export default {
     ...mapActions('channels', ['loadAllUsersInChannel']),
     ...mapActions('channels', ['addChannel']),
     ...mapActions('channels', ['leaveChannel']),
+    ...mapActions('channels', ['modifySettings']),
   },
 };
 </script>
