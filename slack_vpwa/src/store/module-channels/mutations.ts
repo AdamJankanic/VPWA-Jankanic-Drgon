@@ -77,7 +77,8 @@ const mutation: MutationTree<ChannelsStateInterface> = {
     //console.log(users);
     state.users = [];
     for (let i = 0; i < users.length; i++) {
-      state.users.push(users[i].nickname);
+      // state.users.push(users[i].nickname);
+      state.users.push(users[i]);
     }
   },
 

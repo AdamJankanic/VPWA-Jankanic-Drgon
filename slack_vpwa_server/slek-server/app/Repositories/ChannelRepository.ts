@@ -23,7 +23,7 @@ export default class ChannelRepository implements ChannelRepositoryContract {
   //get all users in channel
   public async getUsers(channelName: string): Promise<User[]> {
     const users = await Database.rawQuery(
-      'SELECT users.id, users.nickname FROM users \
+      'SELECT users.id, users.nickname, users.isOnline, users.isDnd,onlyMentions FROM users \
     JOIN channel_users ON channel_users.user_id = users.id \
     JOIN channels on channel_users.channel_id = channels.id\
     WHERE channels.name = ?',

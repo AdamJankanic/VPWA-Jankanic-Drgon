@@ -200,7 +200,18 @@
               v-ripple
             >
               <q-item-section>
-                <q-item-label>{{ contact }}</q-item-label>
+                <q-item-label class="flex"
+                  >{{ contact.nickname }}
+                  <div class="icons">
+                    <q-icon
+                      size="md"
+                      name="chat_bubble"
+                      class="q-mr-xs"
+                      :class="stateUser(contact)"
+                    />
+                  </div>
+                </q-item-label>
+                <!-- <p>{{ users }}</p> -->
               </q-item-section>
             </q-item>
           </q-list>
@@ -311,6 +322,16 @@ export default {
   },
 
   methods: {
+    stateUser(user) {
+      if (!user.isOnline) {
+        return 'offline';
+      } else if (user.isDnd) {
+        return 'dnd';
+      } else {
+        return 'online';
+      }
+    },
+
     setOptions() {
       if (this.account[0].isDnd) {
         this.DNB = 'On';
@@ -381,12 +402,12 @@ export default {
     },
 
     async changeSettings(onlineOffline, DNB, notifications) {
-      +console.log(onlineOffline, DNB, notifications);
       await this.modifySettings({
         owner: this.nickname.id,
         onlineOffline: onlineOffline,
         DNB: DNB,
         notifications: notifications,
+        allChannels: this.channels,
       });
     },
 

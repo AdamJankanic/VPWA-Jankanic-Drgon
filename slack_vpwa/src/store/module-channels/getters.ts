@@ -7,6 +7,7 @@ const getters: GetterTree<ChannelsStateInterface, StateInterface> = {
     return Object.keys(context.messages);
   },
   currentMessages(context) {
+    console.log('geeeetteeeeeer');
     return context.active !== null ? context.messages[context.active] : [];
   },
   lastMessageOf(context) {
@@ -16,14 +17,13 @@ const getters: GetterTree<ChannelsStateInterface, StateInterface> = {
     };
   },
   //get joined channels
-  getJoinedChannels(context) {    
+  getJoinedChannels(context) {
     return context.channels;
   },
 
-  getJoinedUsers(context){
+  getJoinedUsers(context) {
     return context.users;
   },
-
 };
 
 export default getters;

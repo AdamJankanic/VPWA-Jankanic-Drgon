@@ -2,40 +2,49 @@ import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
 import { UsersStateInterface } from './state';
 import { userService } from 'src/services';
-
+import { channelService } from 'src/services';
 
 const actions: ActionTree<UsersStateInterface, StateInterface> = {
-
-  async loadUser(
-    {commit},
-    {userId}: {userId: number}
-
-  ){
-    try {            
+  async loadUser({ commit }, { userId }: { userId: number }) {
+    try {
       const user = await userService.loadUser(userId);
-      
-      commit('UPDATE_USER', user)    
+
+      commit('UPDATE_USER', user);
       console.log('after commit', user);
-       
-            
-    } catch(err) {
+    } catch (err) {
       throw err;
     }
   },
 
   async modifySettings(
-    {commit},
-    {owner, onlineOffline, DNB, notifications}: {owner: number, onlineOffline: string, DNB: string, notifications: string}
+    { commit },
+    {
+      owner,
+      onlineOffline,
+      DNB,
+      notifications,
+      allChannels,
+    }: {
+      owner: number;
+      onlineOffline: string;
+      DNB: string;
+      notifications: string;
+      allChannels: string[];
+    }
   ) {
     try {
-      const user = await userService.modifySettings(owner, onlineOffline, DNB, notifications);
-      
-      commit('UPDATE_USER', user)      
-            
-    } catch(err) {
+      const user = await userService.modifySettings(
+        owner,
+        onlineOffline,
+        DNB,
+        notifications
+      );
+
+      commit('UPDATE_USER', user);
+    } catch (err) {
       throw err;
     }
-  }
+  },
 };
 
 export default actions;
