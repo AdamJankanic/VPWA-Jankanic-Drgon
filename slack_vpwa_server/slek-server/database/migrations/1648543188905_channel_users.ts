@@ -26,6 +26,7 @@ export default class ChannelUsers extends BaseSchema {
        */
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
+      table.boolean('isInvited').defaultTo(false)
     })
   }
 

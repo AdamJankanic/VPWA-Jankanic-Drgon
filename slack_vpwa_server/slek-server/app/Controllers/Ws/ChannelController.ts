@@ -55,4 +55,32 @@ export default class ChannelController {
   ) {
     return await this.channelRepository.modifySettings(owner, onlineOffline, DNB, notifications)
   }
+
+  public async inviteUser(
+    { params, socket }: WsContextContract,
+    channelName: string,
+    nickname: string
+  ) {
+    console.log('inviteUserController', channelName, nickname)
+    const channel = await this.channelRepository.inviteUser(channelName, nickname)
+    if (channel === 0) {
+      return 0
+    }
+
+    console.log(channel)
+    socket.broadcast.emit('inviteUserResponse', channelName, nickname, channel)
+    return 1
+  }
+
+  public async inviteChoice(
+    { params, socket }: WsContextContract,
+    channelName: string,
+    nickname: string,
+    choice: boolean
+  ) {
+    console.log('inviteChoiceController', channelName, nickname, choice)
+    const channels = await this.channelRepository.inviteChoice(channelName, nickname, choice)
+
+    return channels
+  }
 }

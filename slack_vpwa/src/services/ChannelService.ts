@@ -28,8 +28,22 @@ class ChannelSocketManager extends SocketManager {
       }
 
       channelService.leave(channelName);
-      console.log('EMIT ZBEHOL, FANFARY');
     });
+
+    this.socket.on(
+      'inviteUserResponse',
+      (channelName: string, nickname: string, channel) => {
+        const user = store.state.auth.user;
+        console.log('UKAZ SA PIKACHU', channel);
+        console.log(channel);
+        if (nickname == user?.nickname) {
+          console.log('ANO, SOM TO JA');
+          store.commit('channels/ADD_NEW_CHANNEL', channel);
+        } else {
+          console.log('NIE SOM TO JA');
+        }
+      }
+    );
   }
 
   public addMessage(message: RawMessage): Promise<SerializedMessage> {
@@ -78,6 +92,15 @@ class ChannelSocketManager extends SocketManager {
       DNB,
       notifications
     );
+  }
+
+  public inviteUser(channelName: string, nickname: string) {
+    console.log('trying to invite user', channelName, nickname);
+    return this.emitAsync('inviteUser', channelName, nickname);
+  }
+
+  public inviteChoice(channelName: string, nickname: string, choice: boolean) {
+    return this.emitAsync('inviteChoice', channelName, nickname, choice);
   }
 }
 

@@ -1,11 +1,12 @@
 import { SerializedMessage } from 'src/contracts';
+import { SerializedChannel } from 'src/contracts';
 
 export interface ChannelsStateInterface {
   loading: boolean;
   error: Error | null;
   messages: { [channel: string]: SerializedMessage[] };
   active: string | null;
-  channels: string[];
+  channels: SerializedChannel[];
   users: string[];
   notification: { userName: string; message: string; channel: string };
 }

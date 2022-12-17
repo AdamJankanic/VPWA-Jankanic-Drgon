@@ -38,25 +38,77 @@
             <q-item
               v-for="(channel, index) in channels"
               :key="index"
-              clickable
+              :clickable="channel.isInvited === 0"
               v-ripple
-              @click="setActiveChannel(channel), (drawer = false)"
+              @click="setActiveChannel(channel.name), (drawer = false)"
+              :class="channel.isInvited === 1 ? 'invitation' : ''"
             >
-              <q-item-section>
-                <q-item-label lines="1">
-                  {{ channel }}
-                </q-item-label>
-                <q-item-label class="conversation__summary" caption>
-                  <!-- {{ lastMessageOf(channel)?.content || '' }} -->
-                </q-item-label>
-              </q-item-section>
+              <div v-if="channel.isInvited === 0" class="flexbox space-between">
+                <q-item-section side>
+                  <q-item-label lines="1">
+                    {{ channel.name }}
+                    {{ channel.isInvited }}
+                    <!-- <p>{{ channel.isInvited }}</p> -->
+                  </q-item-label>
 
-              <q-item-section side>
-                <!--q-item-label caption>
+                  <q-item-label class="conversation__summary" caption>
+                    <!-- {{ lastMessageOf(channel)?.content || '' }} -->
+                  </q-item-label>
+                </q-item-section>
+
+                <q-item-section>
+                  <!--q-item-label caption>
                   {{ channel }}
                 </q-item-label-->
-                <q-icon name="keyboard_arrow_down" />
-              </q-item-section>
+                  <q-icon
+                    v-if="channel.private === 1"
+                    name="lock"
+                    color="black"
+                    size="xs"
+                  />
+                  <q-icon v-else name="people" color="black" size="xs" />
+                </q-item-section>
+                <q-item-section class="absolute-right">
+                  <q-icon
+                    name="delete"
+                    color="red"
+                    size="xs"
+                    @click="
+                      leaveChannel({
+                        channelName: channel.name,
+                        user: nickname.id,
+                      })
+                    "
+                  />
+                </q-item-section>
+              </div>
+
+              <div v-else class="flexbox">
+                <q-item-section side>
+                  <q-item-label lines="1">
+                    {{ channel.name }}
+                    {{ channel.isInvited }}
+                  </q-item-label>
+                </q-item-section>
+
+                <q-item-section>
+                  <q-icon
+                    name="done"
+                    color="green"
+                    size="xs"
+                    @click="responseInvitation(channel.name, true)"
+                  />
+                </q-item-section>
+
+                <q-item-section>
+                  <q-icon
+                    name="close"
+                    color="red"
+                    size="xs"
+                    @click="responseInvitation(channel.name, false)"
+                  />
+                </q-item-section>
+              </div>
             </q-item>
           </q-list>
         </q-scroll-area>
@@ -375,6 +427,13 @@ export default {
         });
         this.setActiveChannel('Slack');
         this.drawer = false;
+      } else if (this.message.startsWith('/invite ')) {
+        let nickname = this.message.split(' ')[1];
+        console.log(nickname);
+        await this.inviteUser({
+          channelName: this.activeChannel,
+          nickname: nickname,
+        });
       }
       //adding message to database
       else if (this.nameActiveChannel !== 'Slack') {
@@ -390,6 +449,7 @@ export default {
     },
     async createChannel(newChannelName, privatePublic) {
       if (newChannelName !== '') {
+        console.log('Add channel', newChannelName, privatePublic);
         await this.addChannel({
           owner: this.nickname.id,
           newChannelName: newChannelName,
@@ -419,6 +479,16 @@ export default {
         });
       }
     },
+
+    async responseInvitation(channelName, response) {
+      console.log('response', channelName, response);
+      await this.$store.dispatch('channels/inviteChoice', {
+        channelName: channelName,
+        nickname: this.nickname.nickname,
+        choice: response,
+      });
+    },
+
     ...mapMutations('channels', {
       setActiveChannel: 'SET_ACTIVE',
     }),
@@ -427,6 +497,7 @@ export default {
     ...mapActions('channels', ['loadAllUsersInChannel']),
     ...mapActions('channels', ['addChannel']),
     ...mapActions('channels', ['leaveChannel']),
+    ...mapActions('channels', ['inviteUser']),
     ...mapActions('users', ['modifySettings']),
   },
 };
@@ -435,6 +506,17 @@ export default {
 <style scoped>
 .flexbox {
   display: flex;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
+.invitation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fdcdcd;
 }
 
 .grid-box {

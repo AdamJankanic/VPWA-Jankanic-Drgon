@@ -100,7 +100,7 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
       const newChannel = await channelService
         .starting('starting_channel')
         .addChannel(owner, newChannelName, privatePublic);
-
+      console.log('v action po addChannel', newChannel);
       await channelService.leave('starting_channel');
 
       if (newChannel) {
@@ -118,7 +118,7 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
   ) {
     try {
       const channels = await channelService
-        .in(channelName)
+        .in('general')
         ?.leaveChannel(channelName, user);
 
       channelService.leave(channelName);
@@ -134,20 +134,69 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
   },
 
   async modifySettings(
-    {commit},
-    {owner, onlineOffline, DNB, notifications}: {owner: number, onlineOffline: string, DNB: string, notifications: string}
+    { commit },
+    {
+      owner,
+      onlineOffline,
+      DNB,
+      notifications,
+    }: {
+      owner: number;
+      onlineOffline: string;
+      DNB: string;
+      notifications: string;
+    }
   ) {
     try {
-      const user = await channelService.starting('starting_channel').modifySettings(owner, onlineOffline, DNB, notifications);
+      const user = await channelService
+        .starting('starting_channel')
+        .modifySettings(owner, onlineOffline, DNB, notifications);
       await channelService.leave('starting_channel');
 
       console.log(user);
-      
-            
-    } catch(err) {
+    } catch (err) {
       throw err;
     }
-  }
+  },
+
+  //invite user to channel
+  async inviteUser(
+    { commit },
+    { channelName, nickname }: { channelName: string; nickname: string }
+  ) {
+    console.log('v action pred invite' + channelName + nickname);
+    try {
+      const channels = await channelService
+        .in('general')
+        ?.inviteUser(channelName, nickname);
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async inviteChoice(
+    { commit },
+    {
+      channelName,
+      nickname,
+      choice,
+    }: { channelName: string; nickname: string; choice: boolean }
+  ) {
+    try {
+      console.log('v action pred inviteChoice', channelName, nickname, choice);
+      const channels = await channelService
+        .in('general')
+        ?.inviteChoice(channelName, nickname, choice);
+      console.log('v action po inviteChoice', channels);
+      commit('UPDATE_CHANNELS', channels);
+
+      if (choice) {
+        this.dispatch('channels/join', channelName);
+      }
+    } catch (err) {
+      throw err;
+    }
+  },
 };
 
 export default actions;

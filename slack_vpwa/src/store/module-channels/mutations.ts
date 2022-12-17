@@ -58,18 +58,29 @@ const mutation: MutationTree<ChannelsStateInterface> = {
 
   //add new channel to the existing channels
   LOADING_ALL_CHANNELS(state, channels) {
-    // state.messages[channel].push(message);
     state.channels = [];
     for (let i = 0; i < channels.length; i++) {
-      state.channels.push(channels[i].name);
+      state.channels.push(channels[i]);
     }
   },
 
   //remove channel from existing channels by name
   REMOVE_CHANNEL(state, channel) {
-    const index = state.channels.indexOf(channel);
-    if (index > -1) {
-      state.channels.splice(index, 1);
+    // const index = state.channels.indexOf(channel);
+    // console.log(state.channels);
+    // console.log('fycvgubhijnok', channel, index);
+    // state.channels.splice(index, 1);
+    // console.log(state.channels);
+
+    console.log('IDEME NA VEC');
+    console.log(state.channels);
+    // display name of the channels
+    for (let i = 0; i < state.channels.length; i++) {
+      console.log(state.channels[i].name);
+      if (state.channels[i].name === channel) {
+        state.channels.splice(i, 1);
+        break;
+      }
     }
   },
 
@@ -83,7 +94,14 @@ const mutation: MutationTree<ChannelsStateInterface> = {
   },
 
   ADD_NEW_CHANNEL(state, channel) {
-    state.channels.push(channel[0].name);
+    state.channels.unshift(channel[0]);
+  },
+
+  UPDATE_CHANNELS(state, channels) {
+    state.channels = [];
+    for (let i = 0; i < channels.length; i++) {
+      state.channels.push(channels[i]);
+    }
   },
 };
 
