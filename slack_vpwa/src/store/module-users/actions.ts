@@ -23,7 +23,6 @@ const actions: ActionTree<UsersStateInterface, StateInterface> = {
       onlineOffline,
       DNB,
       notifications,
-      allChannels,
     }: {
       owner: number;
       onlineOffline: string;

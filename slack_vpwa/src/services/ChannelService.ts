@@ -44,6 +44,18 @@ class ChannelSocketManager extends SocketManager {
         }
       }
     );
+
+    this.socket.on(
+      'revokeUserResponse',
+      (channelName: string, nickname: string) => {
+        const user = store.state.auth.user;
+        if (nickname == user?.nickname) {
+          store.commit('channels/CLEAR_CHANNEL', channelName);
+          store.commit('channels/REMOVE_CHANNEL', channelName);
+          channelService.leave(channelName);
+        }
+      }
+    );
   }
 
   public addMessage(message: RawMessage): Promise<SerializedMessage> {
@@ -85,6 +97,13 @@ class ChannelSocketManager extends SocketManager {
     DNB: string,
     notifications: string
   ) {
+    console.log(
+      'trying to modify settings',
+      owner,
+      onlineOffline,
+      DNB,
+      notifications
+    );
     return this.emitAsync(
       'modifySettings',
       owner,
@@ -101,6 +120,18 @@ class ChannelSocketManager extends SocketManager {
 
   public inviteChoice(channelName: string, nickname: string, choice: boolean) {
     return this.emitAsync('inviteChoice', channelName, nickname, choice);
+  }
+
+  public joinViaMessage(
+    channelName: string,
+    userID: number,
+    privatePublic: string
+  ) {
+    return this.emitAsync('joinViaMessage', channelName, userID, privatePublic);
+  }
+
+  public revokeUser(channelName: string, nickname: string) {
+    return this.emitAsync('revokeUser', channelName, nickname);
   }
 }
 

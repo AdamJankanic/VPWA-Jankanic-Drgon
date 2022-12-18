@@ -53,7 +53,14 @@ export default class ChannelController {
     DNB: string,
     notifications: string
   ) {
-    return await this.channelRepository.modifySettings(owner, onlineOffline, DNB, notifications)
+    const userData = await this.channelRepository.modifySettings(
+      owner,
+      onlineOffline,
+      DNB,
+      notifications
+    )
+    console.log('modifySettingsController', userData)
+    return userData
   }
 
   public async inviteUser(
@@ -82,5 +89,33 @@ export default class ChannelController {
     const channels = await this.channelRepository.inviteChoice(channelName, nickname, choice)
 
     return channels
+  }
+
+  public async joinViaMessage(
+    { params, socket }: WsContextContract,
+    channelName: string,
+    userID: number,
+    choice: string
+  ) {
+    console.log('joinViaMessageController', channelName, userID, choice)
+    const channel = await this.channelRepository.joinViaMessage(channelName, userID, choice)
+
+    console.log('joinViaMessageController', channel)
+    return channel
+  }
+
+  public async revokeUser(
+    { params, socket }: WsContextContract,
+    channelName: string,
+    nickname: string
+  ) {
+    console.log('revokeUserController', channelName, nickname)
+    const channels = await this.channelRepository.revokeUser(channelName, nickname)
+
+    if (channels === 0) {
+      return 0
+    }
+
+    socket.broadcast.emit('revokeUserResponse', channelName, nickname)
   }
 }

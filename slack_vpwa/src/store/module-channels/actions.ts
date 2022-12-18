@@ -105,6 +105,9 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
 
       if (newChannel) {
         commit('ADD_NEW_CHANNEL', newChannel);
+        await this.dispatch('channels/join', newChannelName, {
+          root: true,
+        });
         return newChannel;
       }
     } catch (err) {
@@ -133,33 +136,38 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
     }
   },
 
-  async modifySettings(
-    { commit },
-    {
-      owner,
-      onlineOffline,
-      DNB,
-      notifications,
-    }: {
-      owner: number;
-      onlineOffline: string;
-      DNB: string;
-      notifications: string;
-    }
-  ) {
-    try {
-      const user = await channelService
-        .starting('starting_channel')
-        .modifySettings(owner, onlineOffline, DNB, notifications);
-      await channelService.leave('starting_channel');
+  // async modifySettings(
+  //   { commit },
+  //   {
+  //     owner,
+  //     onlineOffline,
+  //     DNB,
+  //     notifications,
+  //   }: {
+  //     owner: number;
+  //     onlineOffline: string;
+  //     DNB: string;
+  //     notifications: string;
+  //   }
+  // ) {
+  //   try {
+  //     console.log('ACTIONS MODIFY SETTINGS');
+  //     const user = await channelService
+  //       .starting('starting_channel')
+  //       .modifySettings(owner, onlineOffline, DNB, notifications);
+  //     await channelService.leave('starting_channel');
 
-      console.log(user);
-    } catch (err) {
-      throw err;
-    }
-  },
+  //     console.log(
+  //       'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+  //       user
+  //     );
+  //   } catch (err) {
+  //     throw err;
+  //   }
+  // },
 
   //invite user to channel
+
   async inviteUser(
     { commit },
     { channelName, nickname }: { channelName: string; nickname: string }
@@ -169,6 +177,7 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
       const channels = await channelService
         .in('general')
         ?.inviteUser(channelName, nickname);
+      1;
     } catch (err) {
       throw err;
     }
@@ -193,6 +202,46 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
       if (choice) {
         this.dispatch('channels/join', channelName);
       }
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async joinViaMessage(
+    { commit },
+    {
+      channelName,
+      userID,
+      privatePublic,
+    }: { channelName: string; userID: number; privatePublic: string }
+  ) {
+    try {
+      console.log(
+        'v action pred joinViaMessage',
+        channelName,
+        userID,
+        privatePublic
+      );
+      const channel = await channelService
+        .in('general')
+        ?.joinViaMessage(channelName, userID, privatePublic);
+
+      if (channel !== 0) {
+        commit('ADD_NEW_CHANNEL', channel);
+        this.dispatch('channels/join', channelName);
+      }
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async revokeUser(
+    { commit },
+    { channelName, nickname }: { channelName: string; nickname: string }
+  ) {
+    try {
+      await channelService.in('general')?.revokeUser(channelName, nickname);
+      // commit('UPDATE_CHANNELS', channels);
     } catch (err) {
       throw err;
     }

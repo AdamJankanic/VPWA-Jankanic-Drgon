@@ -56,6 +56,8 @@ declare module '@ioc:Repositories/ChannelRepository' {
     ): Promise<any>
     inviteUser(channelName: string, nickname: string): Promise<any>
     inviteChoice(channelName: string, nickname: string, choice: boolean): Promise<any>
+    joinViaMessage(channelName: string, userID: number, privatePublic: string): Promise<any>
+    revokeUser(channelName: string, nickname: string): Promise<any>
   }
   const ChannelRepository: ChannelRepositoryContract
   export default ChannelRepository

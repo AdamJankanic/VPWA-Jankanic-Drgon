@@ -47,7 +47,7 @@
                 <q-item-section side>
                   <q-item-label lines="1">
                     {{ channel.name }}
-                    {{ channel.isInvited }}
+                    <!-- {{ channel.isInvited }} -->
                     <!-- <p>{{ channel.isInvited }}</p> -->
                   </q-item-label>
 
@@ -70,6 +70,7 @@
                 </q-item-section>
                 <q-item-section class="absolute-right">
                   <q-icon
+                    v-if="channel.name !== 'general'"
                     name="delete"
                     color="red"
                     size="xs"
@@ -87,7 +88,7 @@
                 <q-item-section side>
                   <q-item-label lines="1">
                     {{ channel.name }}
-                    {{ channel.isInvited }}
+                    <!-- {{ channel.isInvited }} -->
                   </q-item-label>
                 </q-item-section>
 
@@ -121,7 +122,8 @@
               <img :src="`https://cdn.quasar.dev/img/avatar3.jpg`" />
             </q-avatar>
             <div class="nickname">
-              <p class="q-mb-none text-bold">{{ nickname.nickname }}</p>
+              <p class="q-mb-none text-bold">{{ account[0].nickname }}</p>
+              <!-- <p>{{ account.isOnline }}</p> -->
             </div>
           </div>
           <div
@@ -132,7 +134,7 @@
                 size="md"
                 name="chat_bubble"
                 class="q-mr-xs"
-                :class="status"
+                :class="stateUser(account[0])"
               />
               <q-icon
                 @click="(small = true), setOptions()"
@@ -420,7 +422,10 @@ export default {
           channelName: this.activeChannel,
         });
         this.drawer = true;
-      } else if (this.message === '/cancel') {
+      } else if (
+        this.message === '/cancel' &&
+        this.activeChannel !== 'general'
+      ) {
         await this.leaveChannel({
           channelName: this.activeChannel,
           user: this.nickname.id,
@@ -428,13 +433,149 @@ export default {
         this.setActiveChannel('Slack');
         this.drawer = false;
       } else if (this.message.startsWith('/invite ')) {
+        for (let i = 0; i < this.channels.length; i++) {
+          if (this.channels[i].name === this.activeChannel) {
+            if (
+              this.channels[i].private &&
+              this.channels[i].creator_id !== this.nickname.id
+            ) {
+              alert(
+                'You can not invite users to private channel unless you are creator'
+              );
+              this.message = '';
+              this.loading = false;
+              return;
+            }
+          }
+        }
+
         let nickname = this.message.split(' ')[1];
+        if (nickname === this.nickname.nickname) {
+          alert('You can not invite yourself to channel');
+          this.message = '';
+          this.loading = false;
+          return;
+        }
         console.log(nickname);
         await this.inviteUser({
           channelName: this.activeChannel,
           nickname: nickname,
         });
+      } else if (this.message.startsWith('/join')) {
+        let channelName = this.message.split(' ')[1];
+        let privatePublic = this.message.split(' ')[2];
+
+        // console.log('SKUSKA VYPISU1', channelName, privatePublic);
+        if (privatePublic === undefined || privatePublic.trim() === '') {
+          privatePublic = 'public';
+        }
+        // console.log('SKUSKA VYPISU2', channelName, privatePublic);
+        if (privatePublic !== 'public' && privatePublic !== 'private') {
+          alert('Please type private or nothing after channel name');
+          this.message = '';
+          this.loading = false;
+          return;
+        }
+
+        await this.$store.dispatch('channels/joinViaMessage', {
+          channelName: channelName,
+          userID: this.nickname.id,
+          privatePublic: privatePublic,
+        });
+      } else if (this.message === '/quit') {
+        console.log(this.nickname);
+        let creatorID;
+        for (let i = 0; i < this.channels.length; i++) {
+          if (this.channels[i].name === this.activeChannel) {
+            creatorID = this.channels[i].creator_id;
+            break;
+          }
+        }
+        if (creatorID === this.nickname.id) {
+          await this.leaveChannel({
+            channelName: this.activeChannel,
+            user: this.nickname.id,
+          });
+          this.setActiveChannel('Slack');
+        } else {
+          alert('Only creator can destroy channel');
+        }
+      } else if (this.message.startsWith('/revoke')) {
+        let nicknameRevoke = this.message.split(' ')[1];
+        let channelInfo;
+        for (let i = 0; i < this.channels.length; i++) {
+          if (this.channels[i].name === this.activeChannel) {
+            channelInfo = this.channels[i];
+            break;
+          }
+        }
+
+        console.log('SKUSKA VYPISU', channelInfo);
+        if (channelInfo.private === 0) {
+          alert('You can not revoke users from public channel');
+          this.message = '';
+          this.loading = false;
+          return;
+        }
+
+        if (channelInfo.creator_id !== this.nickname.id) {
+          alert('You can not revoke users from channel unless you are creator');
+          this.message = '';
+          this.loading = false;
+          return;
+        }
+
+        if (nicknameRevoke === this.nickname.nickname) {
+          alert('You can not revoke yourself from channel');
+          this.message = '';
+          this.loading = false;
+          return;
+        }
+
+        await this.revokeUser({
+          channelName: this.activeChannel,
+          nickname: nicknameRevoke,
+        });
+      } else if (this.message.startsWith('/kick')) {
+        let nicknameKick = this.message.split(' ')[1];
+        let channelInfo;
+        for (let i = 0; i < this.channels.length; i++) {
+          if (this.channels[i].name === this.activeChannel) {
+            channelInfo = this.channels[i];
+            break;
+          }
+        }
+
+        console.log('SKUSKA VYPISU', channelInfo);
+        if (channelInfo.private === 1) {
+          alert(
+            'You can not kick users from private channel (use /revoke nickname instead)'
+          );
+          this.message = '';
+          this.loading = false;
+          return;
+        }
+
+        if (channelInfo.creator_id !== this.nickname.id) {
+          alert('You can not kick users from channel unless you are creator');
+          this.message = '';
+          this.loading = false;
+          return;
+        }
+
+        if (nicknameKick === this.nickname.nickname) {
+          alert('You can not kick yourself from channel');
+          this.message = '';
+          this.loading = false;
+          return;
+        }
+
+        await this.revokeUser({
+          channelName: this.activeChannel,
+          nickname: nicknameKick,
+        });
       }
+
       //adding message to database
       else if (this.nameActiveChannel !== 'Slack') {
         await this.addMessage({
@@ -455,19 +596,20 @@ export default {
           newChannelName: newChannelName,
           privatePublic: privatePublic,
         });
-        await this.$store.dispatch('channels/join', newChannelName, {
-          root: true,
-        });
+        // await this.$store.dispatch('channels/join', newChannelName, {
+        //   root: true,
+        // });
       }
     },
 
     async changeSettings(onlineOffline, DNB, notifications) {
+      console.log('change settings', onlineOffline, DNB, notifications);
       await this.modifySettings({
         owner: this.nickname.id,
         onlineOffline: onlineOffline,
         DNB: DNB,
         notifications: notifications,
-        allChannels: this.channels,
+        // allChannels: this.channels,
       });
     },
 
@@ -498,6 +640,7 @@ export default {
     ...mapActions('channels', ['addChannel']),
     ...mapActions('channels', ['leaveChannel']),
     ...mapActions('channels', ['inviteUser']),
+    ...mapActions('channels', ['revokeUser']),
     ...mapActions('users', ['modifySettings']),
   },
 };
